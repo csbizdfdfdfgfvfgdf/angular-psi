@@ -1,0 +1,194 @@
+<div class="title-box">
+    <div class="title">
+            {{'login.appName' | translate }}  
+    </div>
+</div>
+<div [ngClass]="{'box':translates}">
+    <div class="login-box front">
+        <div class="title">  {{'login.userLogin' | translate }}</div>
+        <form #userForm="ngForm" class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>{{'registration.email'|translate}}</mat-label>
+                <input id="userName" required matInput #userName='ngModel' [(ngModel)]="user.userName" name="userName"
+                       placeholder="Email">
+                <mat-error *ngIf="userName.invalid">{{'login.emailInvalid' | translate}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>{{'login.password' | translate}}</mat-label>
+                <input id="password" required matInput #password='ngModel' [(ngModel)]="user.password" name="password"
+                       placeholder="Password" [type]="hide ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hide = !hide"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon style="height: 2.2em">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="password.invalid">{{'login.passwordInvalid' | translate}}</mat-error>
+            </mat-form-field>
+        </form>
+        <section>
+            <div class="example-button-row">
+                <button [disabled]="!userForm.form.valid" mat-raised-button style="width: 100%" color="primary"
+                        (click)="login()">{{'login.signin' | translate}}   
+                </button>
+            </div>
+        </section>
+        <div class="version"> 
+            <a (click)="showModal()" style="margin-left: 10px">{{'login.retrivePass' | translate}}</a>
+            <a (click)="resetShowModal()" style="margin-left: 10px">{{'login.forgotPass' | translate}}</a>
+            <a (click)="registerBox()" style="margin-left: 10px">{{'login.createAcc' | translate}}  >></a>
+        </div>
+    </div>
+
+    <div class="login-box back">
+        <div class="title">{{'registration.userLogin' | translate}}</div>
+        <form #registerForm="ngForm" class="example-form">
+            <mat-form-field class="example-full-width">
+                <mat-label>{{'registration.email'|translate}}</mat-label>
+                <input id="registerUserName" required matInput #registerUserName='ngModel'
+                       [(ngModel)]="registerUser.userName" name="registerUserName"
+                       placeholder="Email">
+                <mat-error *ngIf="registerUserName.invalid">{{'registration.emailInvalid' | translate}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="example-full-width">
+                <mat-label>{{'registration.password' | translate}}</mat-label>
+                <input id="registerPassword" required matInput #registerPassword='ngModel'
+                       [(ngModel)]="registerUser.password" name="registerPassword"
+                       placeholder="Password" [type]="hide ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hide = !hide"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon style="height: 2.2em">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="registerPassword.invalid">{{'registration.passwordInvalid' | translate}}</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>{{'registration.confirmPassword' | translate}}</mat-label>
+                <input [appPasswordConfirm]="registerUser.password" id="password_confirmation" required matInput
+                       #password_confirmation='ngModel'
+                       [(ngModel)]="registerUser.password_confirmation" name="password_confirmation"
+                       placeholder="Password" [type]="hide ? 'password' : 'text'">
+                <button mat-icon-button matSuffix (click)="hide = !hide"
+                        [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+                    <mat-icon style="height: 2.2em">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                </button>
+                <mat-error *ngIf="password_confirmation.errors?.passwordConfirm">
+                        {{'registration.confirmPassInvalid'|translate}}
+                </mat-error>
+                <mat-error *ngIf="password_confirmation.errors?.required">
+                        {{'registration.confirmPassEmpty'|translate}}
+                </mat-error>
+            </mat-form-field>
+
+            <!-- <mat-form-field class="example-full-width">
+                <mat-label>{{'registration.email'|translate}}</mat-label>
+                <input id="registerEmail" email required matInput #registerEmail='ngModel'
+                       [(ngModel)]="registerUser.email" name="registerEmail"
+                       placeholder="Email" [type]="'email'">
+                <mat-error *ngIf="registerEmail.errors?.email">{{'registration.emailError'|translate}}</mat-error>
+                <mat-error *ngIf="registerEmail.errors?.required">
+                        {{'registration.emailInvalid'|translate}}</mat-error>
+            </mat-form-field> -->
+        </form>
+        <section>
+            <div class="example-button-row">
+                <button [disabled]="!registerForm.form.valid" mat-raised-button style="width: 100%" color="primary"
+                        (click)="register()">{{'registration.createAcc'|translate}}
+                </button>
+            </div>
+        </section>
+        <div class="version"> 
+            <a (click)="loginBox()" style="margin-left: 40px">{{'registration.login'|translate}} >></a>
+            <br>
+            <a (click)="goToPrivacyPolicy()" style="margin-left: 40px">{{'registration.privacyTerm'|translate}}</a>
+            
+        </div>
+    </div>
+
+</div>
+
+<nz-modal
+        [(nzVisible)]="Visible"
+        nzTitle="{{'registration.retriveByPass'|translate}}"
+        (nzOnCancel)="handleFindBackCancel()"
+        (nzOnOk)="handleFindBackOk()"
+        [nzOkDisabled]="!Form.form.valid"
+        [nzOkLoading]="isOkLoading"
+        [nzOkText]="'registration.confirm'|translate"
+        [nzCancelText]="'registration.cancel'|translate"
+>
+    <form #Form="ngForm" class="example-form">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSpan]="5">{{'registration.email'|translate}}</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" [nzErrorTip]="emailErrorTpl">
+                <input nz-input [type]="'email'" email [(ngModel)]="findBackEmail" name="required" required/>
+                <ng-template #emailErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('email')">
+                            {{'registration.emailError'|translate}}
+                    </ng-container>
+                    <ng-container *ngIf="control.hasError('required')">
+                            {{'registration.emailInvalid'|translate}}
+                    </ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal> 
+
+<nz-modal
+        [(nzVisible)]="resetVisible"
+        nzTitle="{{'registration.resetPass'|translate}}"
+        (nzOnCancel)="resetCancel()"
+        (nzOnOk)="resetBackOk()"
+        [nzOkDisabled]="!resetForm.form.valid"
+        [nzOkLoading]="isOkLoading"
+        [nzOkText]="'registration.confirm'|translate"
+        [nzCancelText]="'registration.cancel'|translate"
+>
+    <form #resetForm="ngForm" class="example-form">
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSpan]="5">{{'registration.email'|translate}}</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" [nzErrorTip]="resetErrorTpl">
+                <input nz-input [type]="'email'" email [(ngModel)]="resetPwd.email"
+                       #resetPwdEmail='ngModel' name="resetPwdEmail" required/>
+                <ng-template #resetErrorTpl let-control>
+                    <ng-container *ngIf="resetPwdEmail.errors?.email">
+                            {{'registration.emailError'|translate}}
+                    </ng-container>
+                    <ng-container *ngIf="resetPwdEmail.errors?.required">
+                            {{'registration.emailInvalid'|translate}}
+                    </ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSpan]="5">{{'registration.password' | translate}}</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" [nzErrorTip]="resetPasswordErrorTpl">
+                <input nz-input [(ngModel)]="resetPwd.password"
+                       #resetPassword='ngModel' name="resetPassword" required/>
+                <ng-template #resetPasswordErrorTpl let-control>
+                    <ng-container *ngIf="resetPassword.errors?.required">
+                            {{'registration.passwordInvalid' | translate}}
+                    </ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSpan]="5">{{'registration.confirmPassword' | translate}}</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" [nzErrorTip]="resetConfirmationErrorTpl">
+                <input nz-input [appPasswordConfirm]="resetPwd.password" [(ngModel)]="resetPwd.password_confirmation"
+                       #resetConfirmation='ngModel' name="resetConfirmation" required/>
+                <ng-template #resetConfirmationErrorTpl let-control>
+                    <ng-container *ngIf="resetConfirmation.errors?.required">
+                           {{'registration.enterPassAgain'|translate}}
+                    </ng-container>
+
+                    <ng-container *ngIf="resetConfirmation.errors?.passwordConfirm">
+                            {{'registration.confirmPassInvalid'|translate}}
+                    </ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal>
+

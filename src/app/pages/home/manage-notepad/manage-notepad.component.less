@@ -1,0 +1,254 @@
+nz-header{
+  border-bottom: 1px solid #f0f0f0;
+}
+nz-sider {
+  background-color: #fff;
+}
+
+nz-content {
+  background-color: #fff;
+  border-left: 1px solid #f0f0f0;
+
+} 
+nz-layout:last-child {
+  margin: 0;
+}
+.example-container {
+  width: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+.example-list {
+  border: solid 1px #ccc;
+  height:calc(100vh - 360px) !important;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+.flex{
+  display: flex;
+}
+.hidden{
+  height: 0 !important;
+  overflow: hidden;
+}
+.box-active{
+  background-color: #1890ff !important;
+  opacity: 0.6;
+}
+.example-box {
+  color: rgba(0, 0, 0, 0.87);
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+  height: 40px;
+  line-height: 40px;
+  padding: 0 8px;
+
+  &:hover{
+    background-color: #1890ff;
+  }
+}
+.dropdownMenu:hover{
+  background-color: #1890ff !important;
+  opacity: 0.8;
+}
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.example-box:last-child {
+  border: none;
+}
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+::ng-deep .ant-btn-background-ghost.ant-btn-link {
+  color: rgba(0,0,0,0.65);
+}
+::ng-deep .ant-btn-link{
+  color:  white !important;
+} 
+.spacer {
+    flex: 1 1 auto;
+} 
+.authcontainer {  
+    position: fixed; 
+    height: 100%;
+    width: 100%;
+}  
+.header-box-shadow {
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+    background: #071E6C;
+} 
+.demoLogo{
+    height: 45px;
+    width: 150px;
+    margin-right: 20px;
+}
+.main-container{
+  display: inline-flex;
+  width: 100%; 
+  overflow: auto;
+  height: calc(100vh - 90px);
+  border: 5px solid #071E6C;
+  padding: 10px;
+}
+.leftBox{ 
+  padding: 10px;
+  overflow: auto; 
+}
+.RightBox{ 
+  padding: 10px;
+  overflow: auto;
+}
+.copyright{
+  width: 100%;
+  text-align: right; 
+  padding-left: -36px;
+  background: darkgray; 
+  padding-right: 50px; 
+}
+.heading{
+  color: #071E6C; 
+  font: 420 20px/45px Roboto, "Helvetica Neue", sans-serif;
+}
+.icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 26px;
+}
+.iconHeading{
+  width: 28px;
+  height: 28px;
+  margin-right: 8px;
+}
+.iconsGroup{
+  width: 100%;
+  display: block;
+  text-align: right;
+  margin-bottom: 10px;
+}
+.iconSubmit{    
+  height: 50px;
+  width: 130px;
+  cursor: pointer;
+}
+// treeview
+mat-icon{
+  margin-right: 5px;
+}
+.example-tree-invisible {
+  display: none;
+}
+.example-tree{ 
+  height:calc(100vh - 240px) !important;
+}
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+  cursor: pointer;
+}
+.background-highlight{
+  background: #87ceff;
+  color: white !important;
+}
+::ng-deep .background-highlight{
+  background: #87ceff;
+  color: white !important;
+}
+
+
+
+
+
+.example-container {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.example-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+
+.example-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+              0 8px 10px 1px rgba(0, 0, 0, 0.14),
+              0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+
+.drop-above {
+  border-top: 10px solid #dddddd;
+  margin-top: -10px;
+}
+
+.drop-below {
+  border-bottom: 10px solid #dddddd;
+  margin-bottom: -10px;
+}
+
+.drop-center {
+  background-color: #dddddd;
+}
+
+:host::ng-deep .splitContentArea{
+  background: white; 
+  max-width: calc(100% - 205px);
+}

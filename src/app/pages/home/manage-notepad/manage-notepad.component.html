@@ -1,0 +1,184 @@
+<mat-sidenav-container class="authcontainer" >
+  <mat-sidenav-content style="z-index: unset;overflow: hidden;" >
+      <mat-toolbar  class="header-box-shadow">            
+           <span nz-col style="margin-left: 20px;" style="color: white">
+            {{'notepad.appHeading'|translate}}
+            </span> 
+           <span class="spacer"></span> 
+           
+           <ng-container *ngIf="!user.userName">
+            <span nz-col style="margin-left: 20px;"  style="color: white">
+            <a nz-button nzType="link" routerLink="/login/doregister">{{'notepad.signUp'|translate}}</a>
+            </span>
+            <span nz-col style="margin-left: 20px;"  style="color: white">
+            <a nz-button nzType="link" routerLink="/login/dologin">{{'notepad.login'|translate}}</a>
+            </span>
+            </ng-container>
+
+            <span nz-col>
+                <nz-button-group>
+                    <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomLeft">
+                        <i nz-icon nzType="user"></i>
+                    </button>
+                </nz-button-group>
+            </span>
+            <nz-dropdown-menu #menu2="nzDropdownMenu">
+                <ul nz-menu>
+                    <li style="width: 120px" nz-menu-item> {{user.userName && !isOpenUser ? user.userName : 'Tourist'}}</li>
+                    <li style="width: 120px" nz-menu-item (click)="logout()">{{'notepad.logout'|translate}}</li>
+                </ul>
+            </nz-dropdown-menu>  
+     </mat-toolbar> 
+     <div class="main-container" [style.background-color]="backgroundColor">
+        <as-split>
+            <as-split-area size="30" #area1>
+              <div class="leftBox">
+                <header class="heading">
+                        <!-- <mat-icon style="cursor: pointer;" >create_new_folder</mat-icon>
+                        {{'notepad.folderHeading' | translate }}  -->
+                        <button mat-flat-button  style="background: #071E6C;color: white" (click)="addFootFile()">
+                            {{'notepad.addFolder' | translate }} 
+                        </button> 
+                </header> 
+                <div> 
+                    <mat-icon style="cursor: pointer;" (click)="getRootNOte()">home</mat-icon>
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree"
+                              cdkDropList (cdkDropListDropped)="dropTree($event)" 
+                              [cdkDropListConnectedTo]="[cdkDragItem]" id="treeFolder" #treeFolder> 
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle  matTreeNodePadding cdkDrag [cdkDragData]="node"
+                                        (contextmenu)="onContextMenu($event, node,'menu')"> 
+                        <li id="{{node.menuId}}" class="mat-tree-node" (click)="activeNode = node;activatedNodeChange(node)" 
+                            [ngClass]="{ 'background-highlight': activeNode === node }">
+                             <button mat-icon-button disabled></button>
+                             <mat-icon>folder_open</mat-icon>
+                             {{node.menuName}}
+                        </li>
+                        </mat-tree-node> 
+                        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding cdkDrag [cdkDragData]="node"
+                                               (contextmenu)="onContextMenu($event, node,'menu')">
+                        <li>
+                            <div class="mat-tree-node" (click)="activeNode = node;activatedNodeChange(node)" 
+                                 [ngClass]="{ 'background-highlight': activeNode === node }" id="{{node.menuId}}">
+                            <button mat-icon-button matTreeNodeToggle
+                                    [attr.aria-label]="'Toggle ' + node.menuName">
+                                <mat-icon class="mat-icon-rtl-mirror">
+                                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                </mat-icon>
+                            </button>
+                            <mat-icon>folder_open</mat-icon>
+                            {{node.menuName}}
+                            </div>
+                            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                            <ng-container matTreeNodeOutlet></ng-container>
+                            </ul>
+                        </li>
+                        </mat-nested-tree-node>
+                    </mat-tree>
+                </div> 
+            </div>
+            </as-split-area>
+            <as-split-area size="70" #area2>
+              <div class="RightBox">
+                    <header class="heading"></header> 
+                    <header class="heading" style="padding-left: 5px;">{{'notepad.notes'|translate}}</header>  
+                    
+                <div class="example-list" cdkDropList (cdkDropListDropped)="drop($event)" 
+                        #cdkDragItem="cdkDropList" [cdkDropListData]="noteList" [cdkDropListConnectedTo]="[cdkDragItem]">
+                    <div class="example-box" *ngFor="let item of noteList;let i = index;" cdkDrag
+                            (cdkDragStarted)="dragStarted(item)" [cdkDragData]="item" (contextmenu)="onContextMenu($event, item,'note')">
+                            {{item.content}}
+                    </div>
+                </div>
+                <mat-form-field appearance="fill" style="width: 100%">
+                        <mat-label>{{'notepad.addContent'|translate}}</mat-label>
+                        <textarea matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent"></textarea>
+                </mat-form-field>
+                <button mat-flat-button style="background: #071E6C;color: white" (click)="checkUsetExistForRootNote()">
+                    {{'notepad.submit' | translate }} 
+                </button> 
+                <!-- <img class="iconSubmit" src="../../../../assets/png/submitNote.png" (click)="checkUsetExistForRootNote()"> -->
+              </div>
+            </as-split-area>
+        </as-split>
+      </div> 
+
+   <div class="copyright">
+       <span>
+             {{'notepad.copyRight'|translate}}
+       </span>
+       <span> 
+            <select id="backgroundColor" name="backgroundColor" [(ngModel)]="backgroundColor"> 
+                <option *ngFor="let color of colors" [value]="color">
+                {{color}}
+                </option>
+            </select> 
+       </span>
+       
+       <span class="form-inline">
+        <select 
+            class="form-control" 
+            #selectedLang 
+            (change)="switchLang(selectedLang.value)">
+          <option *ngFor="let language of translate.getLangs()" 
+            [value]="language"
+            [selected]="language === translate.currentLang">
+            {{ language }}
+          </option>
+        </select>
+      </span>
+
+   </div>
+  </mat-sidenav-content> 
+  </mat-sidenav-container> 
+  <!-- <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple"></ngx-spinner> -->
+
+  
+<nz-modal  [(nzVisible)]="Visible"
+        nzTitle="{{'notepad.addFolder'|translate}}"
+        (nzOnCancel)="handleCancel()"
+        (nzOnOk)="checkUsetExist()"
+        [nzOkDisabled]="!Form.form.valid"
+        [nzOkLoading]="isOkLoading">
+    <form #Form="ngForm" class="example-form">
+            <nz-form-item> 
+                <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="{{'notepad.folderNameReq'|translate}}">
+                    <input nz-input [(ngModel)]="addFileItem.menuName" name="required" required/>
+                </nz-form-control>
+            </nz-form-item>
+    </form>
+</nz-modal>
+
+<div style="visibility: hidden; position: fixed"
+  [style.left]="contextMenuPosition.x"
+  [style.top]="contextMenuPosition.y"
+  [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu="matMenu" #contextMenu2="matMenu">
+	<ng-template matMenuContent let-item ="item" let-recType = "recType"> 
+		<button *ngIf="recType == 'menu'" mat-menu-item (click)="onContextMenuAction(item,recType,'create_new_folder')"><mat-icon>create_new_folder</mat-icon>{{'contetMenu.newFolder'|translate}}</button>
+		<button mat-menu-item (click)="onContextMenuAction(item,recType,'cut')"><mat-icon>content_cut</mat-icon>{{'contetMenu.cut'|translate}}</button>
+		<button mat-menu-item (click)="onContextMenuAction(item,recType,'copy')"><mat-icon>content_copy</mat-icon>{{'contetMenu.copy'|translate}}</button>
+		<button *ngIf="recForCopyCut" mat-menu-item (click)="onContextMenuAction(item,recType,'paste')"><mat-icon>content_paste</mat-icon>{{'contetMenu.paste'|translate}}</button>
+		<button mat-menu-item (click)="onContextMenuAction(item,recType,'edit')"> <mat-icon>edit</mat-icon>{{'contetMenu.edit'|translate}}</button>
+		<button mat-menu-item (click)="onContextMenuAction(item,recType,'delete')"><mat-icon>delete_outline</mat-icon>{{'contetMenu.delete'|translate}}</button>
+	</ng-template>
+</mat-menu>
+
+<nz-modal  [(nzVisible)]="editItemVisible" nzTitle="{{'contetMenu.editItem'|translate}}" (nzOnCancel)="editItemVisible = false" (nzOnOk)="saveItemRecord()">
+    <form #Form="ngForm" class="example-form"> 
+            <nz-form-item> 
+                <nz-form-control nzHasFeedback [nzSpan]="12">
+                    <input nz-input [(ngModel)]="editItemData.content" name="required" required/>
+                </nz-form-control>
+            </nz-form-item>
+    </form>
+</nz-modal>
+<nz-modal  [(nzVisible)]="editMenuVisible" nzTitle="{{'contetMenu.editItem'|translate}}" (nzOnCancel)="editMenuVisible = false" (nzOnOk)="saveMenuRecord()">
+    <form #Form="ngForm" class="example-form">
+            <nz-form-item> 
+                <nz-form-control nzHasFeedback [nzSpan]="12">
+                    <input nz-input [(ngModel)]="editMenuData.menuName" name="required" required/>
+                </nz-form-control>
+            </nz-form-item> 
+    </form>
+</nz-modal>
