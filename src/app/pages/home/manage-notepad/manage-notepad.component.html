@@ -1,7 +1,7 @@
 <mat-sidenav-container class="authcontainer" >
   <mat-sidenav-content style="z-index: unset;overflow: hidden;" >
       <mat-toolbar  class="header-box-shadow">            
-           <span nz-col style="margin-left: 20px;" style="color: white">
+           <span nz-col style="margin-left: 20px;" style="color: white;margin-left: 50px;">
             {{'notepad.appHeading'|translate}}
             </span> 
            <span class="spacer"></span> 
@@ -15,16 +15,28 @@
             </span>
             </ng-container>
 
-            <span nz-col>
+            <span nz-col style="margin-right: 20px;">
                 <nz-button-group>
                     <button nz-button nz-dropdown [nzDropdownMenu]="menu2" nzPlacement="bottomLeft">
                         <i nz-icon nzType="user"></i>
                     </button>
                 </nz-button-group>
             </span>
+            <span class="form-inline"  style="margin-right: 50px;">
+                <select style="height: 32px;vertical-align: middle;"
+                    class="form-control" 
+                    #selectedLang 
+                    (change)="switchLang(selectedLang.value)">
+                  <option *ngFor="let language of translate.getLangs()" 
+                    [value]="language"
+                    [selected]="language === translate.currentLang">
+                    {{ language }}
+                  </option>
+                </select>
+              </span>
             <nz-dropdown-menu #menu2="nzDropdownMenu">
                 <ul nz-menu>
-                    <li style="width: 120px" nz-menu-item> {{user.userName && !isOpenUser ? user.userName : 'Tourist'}}</li>
+                    <!-- <li style="width: 120px" nz-menu-item> {{user.userName && !isOpenUser ? user.userName : 'Tourist'}}</li> -->
                     <li style="width: 120px" nz-menu-item (click)="logout()">{{'notepad.logout'|translate}}</li>
                 </ul>
             </nz-dropdown-menu>  
@@ -40,7 +52,7 @@
                             {{'notepad.addFolder' | translate }} 
                         </button> 
                 </header> 
-                <div> 
+                <div style="height: calc(100vh - 175px);"> 
                     <mat-icon style="cursor: pointer;" (click)="getRootNOte()">home</mat-icon>
                     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree"
                               cdkDropList (cdkDropListDropped)="dropTree($event)" 
@@ -75,6 +87,9 @@
                         </mat-nested-tree-node>
                     </mat-tree>
                 </div> 
+                <span>
+                    {{'notepad.copyRight'|translate}}
+                </span>
             </div>
             </as-split-area>
             <as-split-area size="70" #area2>
@@ -91,7 +106,7 @@
                 </div>
                 <mat-form-field appearance="fill" style="width: 100%">
                         <mat-label>{{'notepad.addContent'|translate}}</mat-label>
-                        <textarea matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent"></textarea>
+                        <input matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent">
                 </mat-form-field>
                 <button mat-flat-button style="background: #071E6C;color: white" (click)="checkUsetExistForRootNote()">
                     {{'notepad.submit' | translate }} 
@@ -102,32 +117,16 @@
         </as-split>
       </div> 
 
-   <div class="copyright">
-       <span>
-             {{'notepad.copyRight'|translate}}
-       </span>
+   <!-- <div class="copyright">
+       
        <span> 
             <select id="backgroundColor" name="backgroundColor" [(ngModel)]="backgroundColor"> 
                 <option *ngFor="let color of colors" [value]="color">
                 {{color}}
                 </option>
             </select> 
-       </span>
-       
-       <span class="form-inline">
-        <select 
-            class="form-control" 
-            #selectedLang 
-            (change)="switchLang(selectedLang.value)">
-          <option *ngFor="let language of translate.getLangs()" 
-            [value]="language"
-            [selected]="language === translate.currentLang">
-            {{ language }}
-          </option>
-        </select>
-      </span>
-
-   </div>
+       </span> 
+   </div> -->
   </mat-sidenav-content> 
   </mat-sidenav-container> 
   <!-- <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple"></ngx-spinner> -->
