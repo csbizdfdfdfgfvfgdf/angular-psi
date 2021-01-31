@@ -15,7 +15,8 @@ import { Menu } from 'src/app/model/menu';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { NoteService } from './note.service';
-import { Note2Service } from './note2.service'; 
+import { Note2Service } from './note2.service';
+
 declare var $ : any;
 interface TreeNodeData {
     children:any[];    ​​
@@ -73,7 +74,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
               private note2Service: Note2Service,
               public dialog: MatDialog,
               public translate: TranslateService,
-              private route: Router,public spinner:NgxSpinnerService,
+              private route: Router,
+              public spinner:NgxSpinnerService,
               private nzContextMenuService: NzContextMenuService) { 
 
   } 
@@ -100,9 +102,11 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           takeUntil(this.destroy$)
       ).subscribe(res => {
           const key = this.selectedNode.key;
+          this.spinner.show();
           this.noteService.addItem({pId: key, content: res})
               .subscribe(
                   res2 => {
+                      this.spinner.hide();
                       this.fieldContent = '';
                       this.isUserAlreadyExist = true;
                       if(this.selectedNode){
@@ -116,7 +120,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.submitFolder.pipe(
           throttleTime(500),
           takeUntil(this.destroy$)
-      ).subscribe(data => { 
+      ).subscribe(data => {
+          this.spinner.show();
           this.note2Service.addFile(data).subscribe(
             res => { 
                 this.addFileItem.menuName = '';
@@ -147,6 +152,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   dropTree(event: CdkDragDrop<string[]>) { 
   } 
   dragStartedOld(item: any, i: number, dragEl: HTMLElement) {
+      this.spinner.show();
+
       this.noteService.dragSubject.next({item, index: i});
   } 
   startEdit(id: string) {
@@ -219,7 +226,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   isUserAlreadyExist:boolean = true;
   isOpenUser:boolean = false;
   getUser() {
-      this.spinner.show(); 
+      this.spinner.show();
       this.noteService.getUser().subscribe((res: any) => {
           if(res && res.userType == "VISITOR"){
             this.isOpenUser = true;
@@ -246,8 +253,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   const source = timer(1000, 10000);
   source.subscribe(val => this.getUpdatedMenus());
  }
- getUpdatedMenus(){ 
-  this.noteService.getMenus().subscribe(res => { 
+ getUpdatedMenus(){
+  this.noteService.getMenus().subscribe(res => {
     let newTreeData = [];
     let dataSource = new MatTreeNestedDataSource<TreeNodeData>(); 
     if(res){
@@ -346,10 +353,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }  
   addRootFile(){
     let item = {itemId:this.noteList.length+1,content:this.fieldContent} 
-    this.noteList.push(item); 
+    this.noteList.push(item);
+      this.spinner.show();
     this.noteService.addItem({pId:null, content: this.fieldContent})
               .subscribe(
                   res2 => {
+                      this.spinner.hide();
                       this.fieldContent = '';
                       this.getItemsByUserId();
         }
@@ -357,7 +366,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   } 
   getItems() { 
     if(this.selectedNode && this.selectedNode.menuId) { 
-      const key = this.selectedNode.menuId; 
+      const key = this.selectedNode.menuId;
       this.noteService.getItems({pId: key}).subscribe(
           (res: Item[]) => {  
               this.noteList = res; 
@@ -373,15 +382,15 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.activeNode = null;
     this.getItemsByUserId();
   } 
-  getItemsByUserId() { 
+  getItemsByUserId() {
       this.noteService.getItemsByUser().subscribe(
           (res: Item[]) => {  
-              this.noteList = res; 
+              this.noteList = res;
           },(error) => { 
-            console.log(error); 
+            console.log(error);
       }); 
   }  
-  updateItemSort(tmpnode) { 
+  updateItemSort(tmpnode) {
     this.noteService.updateItemSort_gen(tmpnode).subscribe(
         res => { 
                this.getItems(); 

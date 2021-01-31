@@ -22,6 +22,7 @@ import { AngularSplitModule } from 'angular-split';
 import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { PrivacyTermsComponent } from './privacy-terms/privacy-terms.component';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 registerLocaleData(en);
 
@@ -42,6 +43,7 @@ registerLocaleData(en);
         AppRoutingModule,
         IconsProviderModule,
         NzLayoutModule,
+        NgxSpinnerModule,
         ShareModule,
         NzMenuModule,
         FormsModule,
