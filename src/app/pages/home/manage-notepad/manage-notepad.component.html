@@ -104,9 +104,9 @@
                             {{item.content}}
                     </div>
                 </div>
-                <mat-form-field appearance="fill" style="width: 100%">
+                <mat-form-field appearance="outline" style="width: 100%">
                         <mat-label>{{'notepad.addContent'|translate}}</mat-label>
-                        <input matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent">
+                        <textarea rows="4" matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent" > </textarea>
                 </mat-form-field>
                 <button mat-flat-button style="background: #071E6C;color: white" (click)="checkUsetExistForRootNote()">
                     {{'notepad.submit' | translate }} 
