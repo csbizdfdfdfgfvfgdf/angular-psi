@@ -14,8 +14,8 @@ export class UrlService {
     if (environment.production === false) {
       return '/api/' + url;
     }
-    // return 'http://ppssii.com/' + url; 
-    return 'http://52.88.158.96:8080/' + url;
-    // return 'http://localhost:8080/' + url;
+    return 'https://apis.ppssii.com/' + url; 
+    // return 'http://52.88.158.96:8080/' + url;
+    // return 'https://localhost:8080/' + url;
   }
 }
