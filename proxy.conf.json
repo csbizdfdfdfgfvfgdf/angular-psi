@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "http://52.88.158.96:8080/",
+    "target": "https://apis.ppssii.com/",
     "secure": false,
     "pathRewrite": {
       "^/api": ""
