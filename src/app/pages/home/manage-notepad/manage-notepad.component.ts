@@ -141,15 +141,21 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
    }
   drop(event: CdkDragDrop<string[]>) { 
     if (event.previousContainer === event.container) { 
-        this.dragingItem.zindex = event.currentIndex;
+        this.dragingItem.orderId = event.currentIndex;
         moveItemInArray(this.noteList, event.previousIndex, event.currentIndex);
-        this.updateItemSort(this.dragingItem); 
+        this.noteList.forEach((note, index) => {
+          note.orderId = index;
+          this.updateItemSort(note);
+        })
+        
     } else { 
     }
   }
   dragFolderStarted(menu){ 
   }
   dropTree(event: CdkDragDrop<string[]>) { 
+    moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
+    this.updateItemSort(this.dragingItem); 
   } 
   dragStartedOld(item: any, i: number, dragEl: HTMLElement) {
       this.spinner.show();
@@ -218,7 +224,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     // this.activeNode = this.treeMenu[0];
     // this.activatedNodeChange(this.activeNode); 
     this.spinner.hide();
-    this.startReloading();
+    // this.startReloading();
   }
   clearList() {
       this.done = [];
@@ -371,7 +377,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.noteService.getItems({pId: key}).subscribe(
           (res: Item[]) => { 
             this.spinner.hide(); 
-              this.noteList = res; 
+              this.noteList = res.sort((a,b) => a.orderId - b.orderId); 
           },(error) => { 
             this.spinner.hide();
             console.log(error); 
@@ -403,8 +409,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   copy(item) { 
   } 
   cut(item) { 
+    debugger
   } 
-  paste(item) { 
+  paste(item) {
+    debugger 
   } 
   setMoveItem() { 
   } 

@@ -5,6 +5,7 @@ export class Item {
     uId: number;
     userName: string;
     pId: number;
+    orderId: number;
     created: Date;
     updated?: any;
 }

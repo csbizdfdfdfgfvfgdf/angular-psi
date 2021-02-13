@@ -109,12 +109,13 @@ export class NoteService {
     }
 
     updateItemSort_gen(item: Item) {
-        const data: {itemId: number, pId: number, zindex: number} = {itemId: 0, pId: 0, zindex: 0};
-        data.itemId = item.itemId;
-        data.pId = item.pId;
-        data.zindex = item.zindex;
+        // const data: {itemId: number, pId: number, zindex: number} = {itemId: 0, pId: 0, zindex: 0};
+        // data.itemId = item.itemId;
+        // data.pId = item.pId;
+        // data.zindex = item.zindex;
+        item.updated = new Date().toISOString();
         const url = this.url.getUrl(Api.updateItemSort);
-        return this.http.put(url, data);
+        return this.http.put(url, item);
     }
 
     setTreeData(data) {
