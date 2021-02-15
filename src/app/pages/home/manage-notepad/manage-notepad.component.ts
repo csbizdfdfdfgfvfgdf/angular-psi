@@ -143,7 +143,20 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     if (event.previousContainer === event.container) { 
         this.dragingItem.orderId = event.currentIndex;
         moveItemInArray(this.noteList, event.previousIndex, event.currentIndex);
-        this.updateItemSort(this.dragingItem);
+        this.noteList.forEach((note, index) => {
+          note.orderId = index;
+        });
+        const updatedData  = [];
+      this.noteList.forEach((note) => {
+        updatedData.push({
+          itemId: note.itemId,
+          content: note.content,
+          orderId: note.orderId,
+          uId: note.uId,
+          userName: note.userName
+        })
+      })
+      this.updateItemSort(updatedData);
     } else { 
     }
   }
