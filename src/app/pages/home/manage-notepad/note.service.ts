@@ -74,7 +74,7 @@ export class NoteService {
     }
 
     // 添加子节点
-    addItem(data: Itemo) {
+    addItem(data: Itemo[]) {
         const url = this.url.getUrl(Api.addItem);
         return this.http.post(url, data);
     }
