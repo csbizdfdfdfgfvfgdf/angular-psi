@@ -153,7 +153,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           content: note.content,
           orderId: note.orderId,
           uId: note.uId,
-          userName: note.userName
+          userName: note.userName,
+          pId: note.pId
         })
       })
       this.updateItemSort(updatedData);
