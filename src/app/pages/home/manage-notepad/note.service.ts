@@ -11,6 +11,7 @@ import {Item} from '../../../model/item';
 interface Itemo {
     pId?: number | string;
     content?: string;
+    orderId?: number;
 }
 
 export interface ItemArrSort {
@@ -74,7 +75,7 @@ export class NoteService {
     }
 
     // 添加子节点
-    addItem(data: Itemo) {
+    addItem(data: Itemo[]) {
         const url = this.url.getUrl(Api.addItem);
         return this.http.post(url, data);
     }
