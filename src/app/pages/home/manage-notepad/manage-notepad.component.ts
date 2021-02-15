@@ -41,7 +41,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   keyEnter: Observable<any> = fromEvent(window, 'keyup.enter');
   activeNode:any; 
   @ViewChildren(MatTreeNode, { read: ElementRef }) treeNodes: ElementRef[];
-  submitSubject: Subject<string> = new Subject();
+  submitSubject: Subject<any> = new Subject();
   submitFolder: Subject<string> = new Subject();
   destroy$ = new Subject();
   user: User = new User();
@@ -103,7 +103,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       ).subscribe(res => {
           const key = this.selectedNode.key;
           this.spinner.show();
-          this.noteService.addItem([{pId: key, content: res}])
+          this.noteService.addItem([{pId: key, content: res.content, orderId : res.orderId}])
               .subscribe(
                   res2 => {
                       this.spinner.hide();
@@ -347,10 +347,11 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   submit() {
       if(this.selectedNode && this.folderList.length>0) {  
             if(this.fieldContent !== null && this.fieldContent != ''){
+              let orderId = this.noteList.length;
               let item = {itemId:this.noteList.length+1,content:this.fieldContent} 
               this.noteList.push(item); 
               this.msgService.success(this.getTranslationString('notepad.addedSuccess',''));
-              this.submitSubject.next(this.fieldContent);
+              this.submitSubject.next({content : this.fieldContent, orderId});
               this.fieldContent = '';
             }  
         }else { 
@@ -368,10 +369,11 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }  
   addRootFile(){
-    let item = {itemId:this.noteList.length+1,content:this.fieldContent} 
+    let orderId = this.noteList.length;
+    let item = {itemId:this.noteList.length+1,content:this.fieldContent, orderId : this.noteList.length } 
     this.noteList.push(item);
-      this.spinner.show();
-    this.noteService.addItem([{pId:null, content: this.fieldContent}])
+    this.spinner.show();
+    this.noteService.addItem([{pId:null, content: this.fieldContent, orderId}])
               .subscribe(
                   res2 => {
                       this.spinner.hide();
@@ -552,7 +554,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     } 
     copyItemToMenu(targetItem,recForCopyCut){   
           this.spinner.show();
-          this.noteService.addItem([{pId: targetItem.menuId, content: 'copy of: '+recForCopyCut.content}])
+          this.noteService.addItem([{pId: targetItem.menuId, content: 'copy of: '+recForCopyCut.content, orderId : this.noteList.length}])
             .subscribe(
                 res => { 
                    this.spinner.hide(); 

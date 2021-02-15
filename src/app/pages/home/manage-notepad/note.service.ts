@@ -11,6 +11,7 @@ import {Item} from '../../../model/item';
 interface Itemo {
     pId?: number | string;
     content?: string;
+    orderId?: number;
 }
 
 export interface ItemArrSort {
