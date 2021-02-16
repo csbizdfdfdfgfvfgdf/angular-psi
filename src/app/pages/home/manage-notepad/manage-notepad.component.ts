@@ -123,7 +123,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           takeUntil(this.destroy$)
       ).subscribe(data => {
           this.spinner.show();
-          this.note2Service.addFile(data).subscribe(
+          this.note2Service.addFile(this.folderList).subscribe(
             res => { 
                 this.addFileItem.menuName = '';
                 this.addFileItem.pId = null;
@@ -481,7 +481,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         }
     }
     handleOk(): void {
-      let copy = JSON.parse(JSON.stringify(this.addFileItem))  
+      let copy = JSON.parse(JSON.stringify(this.addFileItem)) 
+      copy.orderId = this.folderList.length; 
       this.treeMenu = [];
       this.folderList.push(copy);     
       this.makeTreeData(this.folderList);
