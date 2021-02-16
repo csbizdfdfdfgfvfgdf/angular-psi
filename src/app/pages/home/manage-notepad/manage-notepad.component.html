@@ -55,8 +55,7 @@
                 <div style="height: calc(100vh - 175px);"> 
                     <mat-icon style="cursor: pointer;" (click)="getRootNOte()">home</mat-icon>
                     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree"
-                              cdkDropList (cdkDropListDropped)="dropTree($event)" 
-                              [cdkDropListConnectedTo]="[cdkDragItem]" id="treeFolder" #treeFolder> 
+                              cdkDropList (cdkDropListDropped)="dropTree($event)"  id="treeFolder" #treeFolder> 
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle  matTreeNodePadding cdkDrag [cdkDragData]="node" (cdkDragStarted)="dragFolderStarted(node)"
                                         (contextmenu)="onContextMenu($event, node,'menu')"> 
                         <li id="{{node.menuId}}" class="mat-tree-node" (click)="activeNode = node;activatedNodeChange(node)" 

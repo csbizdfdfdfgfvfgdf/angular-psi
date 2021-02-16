@@ -35,10 +35,7 @@ export class Note2Service {
 
     // 修改文件夹
 
-    editFile(data: {
-        menuId: number,
-        menuName: string
-    }) {
+    editFile(data) {
         const url = this.url.getUrl(Api.updateMenu);
         return this.http.put(url, data);
     }
