@@ -55,13 +55,9 @@ export class Note2Service {
         return this.http.put(url, data);
     }
 
-    updateMenuSort_gen(menu: Menu) {
-        const data: {menuId: number, orderId: number, pId: number} = {menuId: 0, orderId: 0, pId: 0};
-        data.orderId = menu.orderId;
-        data.pId = menu.pId;
-        data.menuId = menu.menuId;
+    updateMenuSort_gen(menu: Menu[]) {
         const url = this.url.getUrl(Api.updateMenuSort);
-        return this.http.put(url, data);
+        return this.http.put(url, menu);
     }
 
     // 移动文件夹节点排序

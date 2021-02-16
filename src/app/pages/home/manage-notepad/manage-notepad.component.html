@@ -57,7 +57,7 @@
                     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree"
                               cdkDropList (cdkDropListDropped)="dropTree($event)" 
                               [cdkDropListConnectedTo]="[cdkDragItem]" id="treeFolder" #treeFolder> 
-                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle  matTreeNodePadding cdkDrag [cdkDragData]="node"
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle  matTreeNodePadding cdkDrag [cdkDragData]="node" (cdkDragStarted)="dragFolderStarted(node)"
                                         (contextmenu)="onContextMenu($event, node,'menu')"> 
                         <li id="{{node.menuId}}" class="mat-tree-node" (click)="activeNode = node;activatedNodeChange(node)" 
                             [ngClass]="{ 'background-highlight': activeNode === node }">

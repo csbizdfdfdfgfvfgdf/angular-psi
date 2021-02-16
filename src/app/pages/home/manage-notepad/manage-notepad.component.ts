@@ -60,6 +60,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   backgroundColor:any = 'AliceBlue';
   colors:any = ['AliceBlue','AntiqueWhite','Beige','DarkGrey','DarkSeaGreen','Gainsboro'] 
   dragingItem:any;
+  dragingMenu:any;
   treeControl = new NestedTreeControl<TreeNodeData>(node => node.children);
   dataSource = new MatTreeNestedDataSource<TreeNodeData>(); 
   hasChild = (_: number, node: TreeNodeData) => !!node.children && node.children.length > 0; 
@@ -143,30 +144,56 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     if (event.previousContainer === event.container) { 
         this.dragingItem.orderId = event.currentIndex;
         moveItemInArray(this.noteList, event.previousIndex, event.currentIndex);
-        this.noteList.forEach((note, index) => {
-          note.orderId = index;
-        });
-        const updatedData  = [];
-      this.noteList.forEach((note) => {
-        updatedData.push({
-          itemId: note.itemId,
-          content: note.content,
-          orderId: note.orderId,
-          uId: note.uId,
-          userName: note.userName,
-          pId: note.pId
-        })
-      })
-      this.updateItemSort(updatedData);
+        this.updateItemSortOrder();
     } else { 
     }
   }
+
+  updateItemSortOrder() {
+    this.noteList.forEach((note, index) => {
+      note.orderId = index;
+    });
+    const updatedData = [];
+    this.noteList.forEach((note) => {
+      updatedData.push({
+        itemId: note.itemId,
+        content: note.content,
+        orderId: note.orderId,
+        uId: note.uId,
+        userName: note.userName,
+        pId: note.pId
+      })
+    })
+    this.updateItemSort(updatedData);
+  }
+
   dragFolderStarted(menu){ 
+    this.dragingMenu = menu;
   }
   dropTree(event: CdkDragDrop<string[]>) { 
     moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
-    this.updateItemSort(this.dragingItem); 
+    this.dragingMenu.orderId = event.currentIndex;
+    this.updateFolderSortOrder(); 
   } 
+
+  updateFolderSortOrder() {
+    this.dataSource.data.forEach((folder, index) => {
+      folder.orderId = index;
+    });
+    const updatedData = [];
+    this.dataSource.data.forEach((folder) => {
+      updatedData.push({
+        menuId: folder.menuId,
+        menuName: folder.menuName,
+        orderId: folder.orderId,
+        pId: folder.pId,
+        uId: folder.uId,
+        userName: folder.userName,
+        userType: folder.userType
+      })
+    })
+    this.updateMenuSort(updatedData);
+  }
   dragStartedOld(item: any, i: number, dragEl: HTMLElement) {
       this.spinner.show();
 
@@ -181,7 +208,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   } 
   editItem(item) {
       this.spinner.show();
-      this.noteService.editItem({itemId: item.itemId, content: item.content, pId: item.pId})
+      this.noteList.forEach((note) => {
+        if(note.itemId === item.itemId) {
+          note.content = item.content
+        }
+      });
+      this.noteService.editItem(this.noteList)
         .subscribe(
             res => { 
                 this.spinner.hide();
@@ -418,6 +450,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
             },(error) => { 
     }); 
   } 
+  updateMenuSort(tmpnode) {
+    this.note2Service.updateMenuSort_gen(tmpnode).subscribe(res => {
+      this.spinner.hide();
+      this.getMenuList();
+    });
+  } 
   copy(item) { 
   } 
   cut(item) { 
@@ -501,9 +539,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
       if(action == 'paste'){
           if(recType == 'note' && recType == this.recTypeForCopyCut){
-              return;
+              this.pasteNote(item)
+          }else {
+            this.pasteMenuOrNote(item);
           }
-          this.pasteMenuOrNote(item);
       }
       if(action == 'edit'){
         this.openEdotDialog(item,recType);
@@ -513,7 +552,24 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
             this.deleteMenuOrNote(item,recType);
         }
       }
+    }
+    pasteNote(targetItem) {
+      if(this.isRecCopyCut) {
+        let data = {pId: targetItem.pId, content: 'copy of: '+this.recForCopyCut.content, orderId : targetItem.orderId};
+        this.noteService.addItem([data])
+          .subscribe(
+            res => {
+              this.noteList.splice(targetItem.orderId, 0, res[0]);
+              this.updateItemSortOrder();;
+            }
+          );
+      
+      }else {
+        moveItemInArray(this.noteList, this.recForCopyCut.orderId, targetItem.orderId);
+        this.updateItemSortOrder();
+      }
     } 
+
     pasteMenuOrNote(targetItem){ 
      if(this.recTypeForCopyCut == 'menu'){
         if(this.isRecCopyCut){
@@ -547,10 +603,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         menu.orderId = recForCopyCut.orderId;
         menu.pId = targetItem.menuId; 
         this.spinner.show();
-        this.note2Service.updateMenuSort_gen(menu).subscribe(res => { 
-             this.spinner.hide();
-             this.getMenuList();
-        });
+        // this.note2Service.updateMenuSort_gen(menu).subscribe(res => { 
+        //      this.spinner.hide();
+        //      this.getMenuList();
+        // });
     } 
     copyItemToMenu(targetItem,recForCopyCut){   
           this.spinner.show();
