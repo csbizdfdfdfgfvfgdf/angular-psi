@@ -123,7 +123,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           takeUntil(this.destroy$)
       ).subscribe(data => {
           this.spinner.show();
-          this.note2Service.addFile(this.folderList).subscribe(
+          this.note2Service.addFile([data]).subscribe(
             res => { 
                 this.addFileItem.menuName = '';
                 this.addFileItem.pId = null;
