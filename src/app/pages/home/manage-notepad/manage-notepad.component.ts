@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, ViewChildren, Inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, ViewChildren, Inject, ChangeDetectorRef } from '@angular/core';
 import { Observable, fromEvent, Subject, timer } from 'rxjs';
 import { CdkDropList, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { User, RegisterUser } from 'src/app/model/user';
@@ -76,6 +76,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     public dialog: MatDialog,
     public translate: TranslateService,
     private route: Router,
+    private changeRef: ChangeDetectorRef,
     public spinner: NgxSpinnerService,
     private nzContextMenuService: NzContextMenuService) {
 
@@ -439,6 +440,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.getItemsByUserId();
     }
   }
+
   getRootNOte() {
     this.selectedNode = null;
     this.activeNode = null;
@@ -572,26 +574,64 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         );
 
     } else {
-      moveItemInArray(this.noteList, this.recForCopyCut.orderId, targetItem.orderId);
+      if(this.noteList[0].pId === this.recForCopyCut.pId) {
+        moveItemInArray(this.noteList, this.recForCopyCut.orderId, targetItem.orderId);
+      }else {
+        this.recForCopyCut.pId = targetItem.pId;
+        this.noteList.splice(targetItem.orderId, 0 , this.recForCopyCut);
+      }
       this.updateItemSortOrder();
     }
   }
 
   pasteMenuOrNote(targetItem) {
-    if (this.isRecCopyCut) {
-      let data = { pId: targetItem.menuId ? targetItem.menuId : 0, menuName: 'copy of: ' + this.recForCopyCut.menuName, orderId: targetItem.orderId };
-       this.note2Service.addFile([data])
-        .subscribe(
-          res => {
-            this.folderList.splice(targetItem.orderId, 0, res[0]);
-            this.updateFolderSortOrder();;
-          }
-        );
+    if((targetItem.menuId === this.recForCopyCut.pId) || this.recTypeForCopyCut === 'menu') {
+      if (this.isRecCopyCut) {
+        let data = { pId: null, menuName: 'copy of: ' + this.recForCopyCut.menuName, orderId: targetItem.orderId };
+         this.note2Service.addFile([data])
+          .subscribe(
+            res => {
+              this.folderList.splice(targetItem.orderId, 0, res[0]);
+              this.updateFolderSortOrder();
+            }
+          );
+  
+      } else {
+        moveItemInArray(this.dataSource.data, this.recForCopyCut.orderId, targetItem.orderId);
+        this.updateFolderSortOrder();
+      }
+    }else {
+      this.selectedNode = targetItem;
+      this.changeRef.detectChanges();
+      this.noteService.getItems({ pId: targetItem.menuId  }).subscribe(
+        (res: Item[]) => {
+          this.spinner.hide();
+          this.noteList = res.sort((a, b) => a.orderId - b.orderId);
+          this.recForCopyCut.pId = targetItem.menuId;
+       
+          if(this.isRecCopyCut) {
+            let data = { pId: targetItem.menuId, content: 'copy of: ' + this.recForCopyCut.content, orderId: targetItem.orderId };
+            this.recForCopyCut.content = 'copy of: ' + this.recForCopyCut.content;
+            this.noteService.addItem([data])
+            .subscribe(
+              res => {
+                this.noteList.splice(targetItem.orderId, 0, res[0]);
+                this.updateItemSortOrder();;
+              }
+            );
+          }else {
+            this.noteList.splice(targetItem.orderId, 0 , this.recForCopyCut);
+            this.updateItemSortOrder();
+          }          
+          this.selectedNode = targetItem;
 
-    } else {
-      moveItemInArray(this.dataSource.data, this.recForCopyCut.orderId, targetItem.orderId);
-      this.updateFolderSortOrder();
+          // this.updateFolderSortOrder();
+        }, (error) => {
+          this.spinner.hide();
+          console.log(error);
+        });
     }
+ 
 
     // if (this.recTypeForCopyCut == 'menu') {
     //   if (this.isRecCopyCut) {
