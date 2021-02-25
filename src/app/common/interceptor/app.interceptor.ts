@@ -24,8 +24,7 @@ export class AppInterceptor implements HttpInterceptor {
                 private loginService: LoginService) {
         // 设置uuid
         this.noteService.uuidSubject.subscribe((res: string) => {
-            console.log();
-            this.uuid = res;
+            this.uuid = JSON.parse(res).data;
         })
 
         // 设置token
