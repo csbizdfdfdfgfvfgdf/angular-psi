@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UrlService} from '../../../common/service/url.service';
 import {Api} from '../../../api/api';
-import {Subject} from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Menu} from '../../../model/menu';
 import {Res} from '../../../model/response';
@@ -69,9 +69,9 @@ export class NoteService {
     }
 
     // 获取Uuid
-    getUuid() {
+    getUuid():Observable<any> {
         const url = this.url.getUrl(Api.makeUuid);
-        return this.http.get(url, {responseType: 'text'});
+        return this.http.get(url);
     }
 
     // 添加子节点

@@ -344,10 +344,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   getUuid() {
     this.spinner.show();
-    this.noteService.getUuid().subscribe((res: string) => {
+    this.noteService.getUuid().subscribe((res) => {
       this.spinner.hide();
-      this.noteService.uuidSubject.next(res);
-      localStorage.setItem('uuid', res);
+      this.noteService.uuidSubject.next(res.data);
+      localStorage.setItem('uuid', res.data);
       this.handleOk();
     }, (error) => {
       this.spinner.hide();
@@ -356,10 +356,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   getUuidForRootNote() {
     this.spinner.show();
-    this.noteService.getUuid().subscribe((res: string) => {
+    this.noteService.getUuid().subscribe((res) => {
       this.spinner.hide();
-      this.noteService.uuidSubject.next(res);
-      localStorage.setItem('uuid', res);
+      this.noteService.uuidSubject.next(res.data);
+      localStorage.setItem('uuid', res.data);
       this.isUserAlreadyExist = true;
       this.submit();
     }, (error) => {
