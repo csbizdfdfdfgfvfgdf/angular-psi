@@ -17,7 +17,7 @@
   "registration.username": "用户名", 
   "registration..emailInvalid": "用户名不能为空", 
   "registration.password": "密码", 
-  "registration..passwordInvalid": "密码不能为空", 
+  "registration.passwordInvalid": "密码不能为空", 
   "registration.confirmPassword": "确认密码", 
   "registration.confirmPassInvalid": "两次密码输入不一致", 
   "registration.confirmPassEmpty": "这里不能为空", 

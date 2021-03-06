@@ -17,7 +17,7 @@
   "registration.username": "Username", 
   "registration..emailInvalid": "Username can not be empty", 
   "registration.password": "Password", 
-  "registration..passwordInvalid": "password can not be blank", 
+  "registration.passwordInvalid": "password can not be blank", 
   "registration.confirmPassword": "Confirm password", 
   "registration.confirmPassInvalid": "Two password entries are inconsistent", 
   "registration.confirmPassEmpty": "This item cannot be empty", 
