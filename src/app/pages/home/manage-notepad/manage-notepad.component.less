@@ -21,7 +21,7 @@ nz-layout:last-child {
 }
 .example-list {
   border: solid 1px #ccc;
-  height:calc(92vh - 250px) !important;
+  height:calc(92vh - 230px) !important;
   background: white;
   border-radius: 4px;
   overflow: hidden;
@@ -72,9 +72,9 @@ nz-layout:last-child {
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-.example-box:last-child {
-  border: none;
-}
+// .example-box:last-child {
+//   border: none;
+// }
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
@@ -167,16 +167,20 @@ mat-icon{
   cursor: pointer;
 }
 .background-highlight{
-  background: #87ceff;
+  background: #87ceff !important;;
   color: white !important;
 }
 ::ng-deep .background-highlight{
-  background: #87ceff;
+  background: #87ceff !important;;
   color: white !important;
 }
 
-
-
+.home-selected{
+  color: #87ceff !important;
+}
+::ng-deep .home-selected{
+  color: #87ceff !important;
+}
 
 
 .example-container {
@@ -226,9 +230,9 @@ mat-icon{
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
-.example-box:last-child {
-  border: none;
-}
+// .example-box:last-child {
+//   border: none;
+// }
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);

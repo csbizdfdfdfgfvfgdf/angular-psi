@@ -85,7 +85,6 @@ export class LoginComponent implements OnInit {
     }
 
     register() {
-        this.registerUser.email = this.registerUser.userName;
         this.loginService.register(this.registerUser).subscribe(
             res => {
                 this.messageService.success(this.getTranslationString('login.regSuccess',''));

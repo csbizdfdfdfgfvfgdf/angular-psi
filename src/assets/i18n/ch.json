@@ -38,7 +38,7 @@
   "notepad.login": "登录",
   "notepad.logout": "退出登录",
   "notepad.notes": "笔记",
-  "notepad.copyRight": "Copyright 2010-2020 NetWork NotePad Pvt Ltd",
+  "notepad.copyRight": "版权 2010-2020 NetWork NotePad 私人有限公司",
   "notepad.addFolder": "新建文件夹",
   "notepad.folderNameReq": "名称是必须的",
   "notepad.addContent": "添加内容",
@@ -54,5 +54,6 @@
   "contetMenu.paste": "粘贴",
   "contetMenu.edit": "编辑",
   "contetMenu.delete": "删除",
-  "contetMenu.editItem": "编辑"
+  "contetMenu.editItem": "编辑",  
+  "notepad.submit": "救"
 }

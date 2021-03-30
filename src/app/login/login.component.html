@@ -43,8 +43,8 @@
         <form #registerForm="ngForm" class="example-form">
             <mat-form-field class="example-full-width">
                 <mat-label>{{'registration.email'|translate}}</mat-label>
-                <input id="registerUserName" required matInput #registerUserName='ngModel'
-                       [(ngModel)]="registerUser.userName" name="registerUserName"
+                <input id="registerUserName" email required matInput #registerUserName='ngModel'
+                       [(ngModel)]="registerUser.email" name="registerUserName"
                        placeholder="Email">
                 <mat-error *ngIf="registerUserName.invalid">{{'registration.emailInvalid' | translate}}</mat-error>
             </mat-form-field>
@@ -78,15 +78,13 @@
                 </mat-error>
             </mat-form-field>
 
-            <!-- <mat-form-field class="example-full-width">
-                <mat-label>{{'registration.email'|translate}}</mat-label>
-                <input id="registerEmail" email required matInput #registerEmail='ngModel'
-                       [(ngModel)]="registerUser.email" name="registerEmail"
-                       placeholder="Email" [type]="'email'">
-                <mat-error *ngIf="registerEmail.errors?.email">{{'registration.emailError'|translate}}</mat-error>
-                <mat-error *ngIf="registerEmail.errors?.required">
-                        {{'registration.emailInvalid'|translate}}</mat-error>
-            </mat-form-field> -->
+            <mat-form-field class="example-full-width">
+                <mat-label>{{'registration.username'|translate}}</mat-label>
+                <input id="registerEmail"  matInput #registerEmail='ngModel'
+                       [(ngModel)]="registerUser.userName" name="registerEmail"
+                       placeholder="User Name" [type]="'email'">
+                
+            </mat-form-field>
         </form>
         <section>
             <div class="example-button-row">

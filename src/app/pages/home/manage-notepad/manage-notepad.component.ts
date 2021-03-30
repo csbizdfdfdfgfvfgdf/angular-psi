@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild, ElementRef, ViewChildren, Inject, ChangeDetectorRef } from '@angular/core';
-import { Observable, fromEvent, Subject, timer } from 'rxjs';
-import { CdkDropList, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { User, RegisterUser } from 'src/app/model/user';
-import { NzMessageService, NzContextMenuService, NzDropdownMenuComponent } from 'ng-zorro-antd';
+import { Observable, fromEvent, Subject } from 'rxjs';
+import { moveItemInArray } from '@angular/cdk/drag-drop';
+import { User } from 'src/app/model/user';
+import { NzMessageService, NzContextMenuService } from 'ng-zorro-antd';
 import { LoginService } from 'src/app/login/login.service';
 import { Router } from '@angular/router';
 import { takeUntil, throttleTime } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Item } from 'src/app/model/item';
 import { Menu } from 'src/app/model/menu';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { NoteService } from './note.service';
 import { Note2Service } from './note2.service';
@@ -68,7 +68,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   Visible = false;
   isOkLoading = false;
   addFileItem: { menuName: string, pId: number } = { menuName: '', pId: this.pId };
-
+  activeNote: any;
   constructor(private msgService: NzMessageService,
     private noteService: NoteService,
     private loginService: LoginService,
@@ -83,6 +83,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   ngOnInit(): void {
     this.getUser();
+    // geting languages locally
     this.translate.addLangs(['en', 'ch']);
     let dfltLang = localStorage.getItem('lang');
     if (dfltLang != null && dfltLang != '') {
@@ -98,6 +99,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
   }
+
   ngAfterViewInit() {
     this.submitSubject.pipe(
       throttleTime(500),
@@ -137,85 +139,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-  dragStarted(item: any) {
-    this.dragingItem = item;
-  }
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      this.dragingItem.orderId = event.currentIndex;
-      moveItemInArray(this.noteList, event.previousIndex, event.currentIndex);
-      this.updateItemSortOrder();
-    } else {
-    }
-  }
-
-  dropTree(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      this.spinner.show();
-      if(this.dragingMenu) {
-        this.dragingMenu.orderId = event.currentIndex;
-      }
-      moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
-      this.updateFolderSortOrder();
-    } else {
-    }
-
-  }
-
-  updateItemSortOrder() {
-    this.noteList.forEach((note, index) => {
-      note.orderId = index;
-    });
-    const updatedData = [];
-    this.noteList.forEach((note) => {
-      updatedData.push({
-        itemId: note.itemId,
-        content: note.content,
-        orderId: note.orderId,
-        uId: note.uId,
-        userName: note.userName,
-        pId: note.pId
-      })
-    })
-    this.updateItemSort(updatedData);
-  }
-
-  dragFolderStarted(menu) {
-    this.dragingMenu = menu;
-  }
-
-
-  updateFolderSortOrder() {
-    this.dataSource.data.forEach((folder, index) => {
-      folder.orderId = index;
-    });
-    const updatedData = [];
-    this.dataSource.data.forEach((folder) => {
-      updatedData.push({
-        menuId: folder.menuId,
-        menuName: folder.menuName,
-        orderId: folder.orderId,
-        pId: folder.pId,
-        uId: folder.uId,
-        userName: folder.userName,
-        userType: folder.userType
-      })
-    })
-    this.updateMenuSort(updatedData);
-  }
-  dragStartedOld(item: any, i: number, dragEl: HTMLElement) {
-    this.spinner.show();
-
-    this.noteService.dragSubject.next({ item, index: i });
-  }
-  startEdit(id: string) {
-    this.editId = id;
-  }
-  stopEdit(item) {
-    this.editId = null;
-    this.editItem(item);
-  }
+  } 
   editItem(item) {
     this.spinner.show();
     this.noteList.forEach((note) => {
@@ -233,7 +157,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   editFile(data) {
     this.spinner.show();
-    this.note2Service.editFile([{ menuId: data.key, menuName: data.menuName, orderId : data.orderId }]).subscribe(
+    this.note2Service.editFile([{ menuId: data.key, menuName: data.menuName, orderId: data.orderId }]).subscribe(
       res => {
         this.editMenuData = new Menu();
         this.spinner.hide();
@@ -272,11 +196,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.dataSource.data = this.treeMenu;
     if (this.isUserAlreadyExist) {
       this.getItemsByUserId();
-    }
-    // this.activeNode = this.treeMenu[0];
-    // this.activatedNodeChange(this.activeNode); 
-    this.spinner.hide();
-    // this.startReloading();
+    } 
+    this.spinner.hide(); 
   }
   clearList() {
     this.done = [];
@@ -296,52 +217,15 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.getMenuList();
     }, (error) => {
       this.spinner.hide();
-      this.isOpenUser = true;
-      //   if (error.status === 401) { 
+      this.isOpenUser = true; 
       if (!localStorage.getItem('uuid')) {
-        this.isUserAlreadyExist = false;
-        //   this.getUuid();
+        this.isUserAlreadyExist = false; 
       } else {
         this.getMenuList();
-      }
-      //   }
+      } 
     });
-  }
-  startReloading() {
-    const source = timer(1000, 10000);
-    source.subscribe(val => this.getUpdatedMenus());
-  }
-  getUpdatedMenus() {
-    this.noteService.getMenus().subscribe(res => {
-      let newTreeData = [];
-      let dataSource = new MatTreeNestedDataSource<TreeNodeData>();
-      if (res) {
-        this.folderList = res;
-        res.forEach(element => {
-          let parent: any = res.find(item => item.menuId == element.pId && element.pId != 0 && element.pId != null);
-          if (parent) {
-            parent.children = parent.children ? parent.children : [];
-            parent.children.push(element);
-          }
-        });
-        res.forEach(element => {
-          if (element.pId == 0 || element.pId == null) {
-            newTreeData.push(element)
-          }
-        });
-        if (newTreeData.length != this.treeMenu.length) {
-          this.treeMenu = newTreeData;
-          dataSource.data = newTreeData;
-          this.dataSource = new MatTreeNestedDataSource<TreeNodeData>();
-          this.dataSource = dataSource;
-          this.activeNode = this.treeMenu[0];
-          this.activatedNodeChange(this.activeNode);
-        }
-      }
-    }, (error) => {
-      this.spinner.hide();
-    });
-  }
+  } 
+  // this Uuid is used for visitor users only
   getUuid() {
     this.spinner.show();
     this.noteService.getUuid().subscribe((res) => {
@@ -386,6 +270,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedNode = activeNode;
     this.getItems();
   }
+  // adding notes into folder
   submit() {
     if (this.selectedNode && this.folderList.length > 0) {
       if (this.fieldContent !== null && this.fieldContent != '') {
@@ -400,6 +285,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.addRootFile();
     }
   }
+  // check if user already login if not login then make its uuid to make his session
   checkUsetExistForRootNote() {
     this.Visible = false;
     if (this.isUserAlreadyExist) {
@@ -410,6 +296,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+  // adding folder on  root level
   addRootFile() {
     let orderId = this.noteList.length;
     let item = { itemId: this.noteList.length + 1, content: this.fieldContent, orderId: this.noteList.length }
@@ -424,6 +311,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       );
   }
+  // get all folders 
   getItems() {
     if (this.selectedNode && this.selectedNode.menuId) {
       const key = this.selectedNode.menuId;
@@ -440,7 +328,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.getItemsByUserId();
     }
   }
-
+// this will return all notes that are saved into root level 
   getRootNOte() {
     this.selectedNode = null;
     this.activeNode = null;
@@ -453,27 +341,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }, (error) => {
         console.log(error);
       });
-  }
-  updateItemSort(tmpnode) {
-    this.noteService.updateItemSort_gen(tmpnode).subscribe(
-      res => {
-        this.getItems();
-      }, (error) => {
-      });
-  }
-  updateMenuSort(tmpnode) {
-    this.note2Service.updateMenuSort_gen(tmpnode).subscribe(res => {
-      this.getMenuList();
-    });
-  }
-  copy(item) {
-  }
-  cut(item) {
-  }
-  paste(item) {
-  }
-  setMoveItem() {
-  }
+  }  
   //===================add edit delete folder=================
   showModal(): void {
     this.Visible = true;
@@ -511,7 +379,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.showModal();
   }
   addFootFile() {
-    this.addFileItem.pId = null;
+    if (this.selectedNode && this.selectedNode.menuId) {
+      const key = this.selectedNode.menuId;
+      this.addFileItem.pId = key;
+    } else {
+      this.addFileItem.pId = null;
+    }
     this.showModal();
   }
   // cut,copy and paste right click menus
@@ -520,38 +393,84 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   recTypeForCopyCut: any;
   @ViewChild(MatMenuTrigger)
   contextMenu: MatMenuTrigger;
-
+  isNoteMenuPaste: boolean = false;
   contextMenuPosition = { x: '0px', y: '0px' };
-
+  contextMenus: any = [];
+  // dynamicaly lists for context menus
+  generalcontextMenusItem: any[] = [{ type: 'cut', icon: 'content_cut', key: 'contetMenu.cut' },
+                                { type: 'copy', icon: 'content_copy', key: 'contetMenu.copy' },
+                                { type: 'edit', icon: 'edit', key: 'contetMenu.edit' },
+                                { type: 'delete', icon: 'delete_outline', key: 'contetMenu.delete' }];
+  generalcontextMenus: any[] = [{ type: 'cut', icon: 'content_cut', key: 'contetMenu.cut' },
+                                { type: 'copy', icon: 'content_copy', key: 'contetMenu.copy' },
+                                { type: 'paste', icon: 'content_paste', key: 'contetMenu.paste' },
+                                { type: 'edit', icon: 'edit', key: 'contetMenu.edit' },
+                                { type: 'delete', icon: 'delete_outline', key: 'contetMenu.delete' }];
+  menuBodycontextMenus: any[] = [{ type: 'create_new_folder', icon: 'create_new_folder', key: 'contetMenu.newFolder' },
+                                 { type: 'paste', icon: 'content_paste', key: 'contetMenu.paste' }];
+  itemBodycontextMenus: any[] = [{ type: 'paste', icon: 'content_paste', key: 'contetMenu.paste' }];
+ 
+  isInnerMenuClicked:Boolean = false;
+  onContextMenuItem(event: MouseEvent, item: any = null,isInnerMenuClicked = false) {
+    event.preventDefault();
+    if(item){
+      this.isInnerMenuClicked = isInnerMenuClicked;
+      this.contextMenu.menuData = { 'item': item, 'recType': 'note' };
+      this.contextMenus = this.generalcontextMenusItem;
+    }else{
+     if(!this.isInnerMenuClicked){
+      this.contextMenu.menuData = { 'item': null, 'recType': 'note' };
+      this.contextMenus = this.itemBodycontextMenus;
+     }
+     this.isInnerMenuClicked = isInnerMenuClicked;
+    }
+    this.contextMenuPosition.x = event.clientX + 'px';
+    this.contextMenuPosition.y = event.clientY + 'px';
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
   onContextMenu(event: MouseEvent, item: any, recType: any) {
     event.preventDefault();
+    this.contextMenus = this.generalcontextMenus;
     this.contextMenuPosition.x = event.clientX + 'px';
     this.contextMenuPosition.y = event.clientY + 'px';
     this.contextMenu.menuData = { 'item': item, 'recType': recType };
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
+  // when context menu clicked
   onContextMenuAction(item: any, recType, action) {
     if (action == 'create_new_folder') {
       this.addFileItem.pId = this.pId = item.key;
       this.addFile();
     }
     if (action == 'copy') {
+      this.isNoteMenuPaste = true;
       this.isRecCopyCut = true;
       this.recForCopyCut = item;
       this.recTypeForCopyCut = recType;
     }
     if (action == 'cut') {
+      this.isNoteMenuPaste = true;
       this.isRecCopyCut = false;
       this.recForCopyCut = item;
       this.recTypeForCopyCut = recType;
     }
     if (action == 'paste') {
-      if (recType == 'note' && recType == this.recTypeForCopyCut) {
-        this.pasteNote(item)
-      } else {
-        this.pasteMenuOrNote(item);
-      }
+      this.isNoteMenuPaste = false;
+      if(this.recTypeForCopyCut == 'note'){
+        if(item){ // this case when you right click to folder and paste
+          this.pasteNote(item);
+        }else{  // this case when you click on right side area to paste note
+          this.pasteNote(this.selectedNode); 
+        }
+      }else{
+        if(item){
+          this.pasteMenuOrNote(item);
+        }else{
+          this.pasteMenuOrNote(this.selectedNode); 
+        } 
+      } 
     }
     if (action == 'edit') {
       this.openEdotDialog(item, recType);
@@ -563,89 +482,67 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
   pasteNote(targetItem) {
-    if (this.isRecCopyCut) {
-      let data = { pId: targetItem.pId, content: 'copy of: ' + this.recForCopyCut.content, orderId: targetItem.orderId };
+    if(this.isRecCopyCut) {
+      this.spinner.show();
+      let data = {pId: targetItem.menuId, content: 'copy of: ' + this.recForCopyCut.content, orderId: targetItem.orderId };
       this.noteService.addItem([data])
         .subscribe(
           res => {
-            this.noteList.splice(targetItem.orderId, 0, res[0]);
-            this.updateItemSortOrder();;
+            this.spinner.hide();
+            this.noteList.splice(targetItem.orderId, 0, res[0]); 
           }
-        );
-
-    } else {
-      if(this.noteList[0].pId === this.recForCopyCut.pId) {
+        ); 
+    }else {
+      if (this.noteList[0].pId === this.recForCopyCut.pId) {
         moveItemInArray(this.noteList, this.recForCopyCut.orderId, targetItem.orderId);
-      }else {
+      } else {
         this.recForCopyCut.pId = targetItem.pId;
-        this.noteList.splice(targetItem.orderId, 0 , this.recForCopyCut);
-      }
-      this.updateItemSortOrder();
+        this.noteList.splice(targetItem.orderId, 0, this.recForCopyCut);
+      } 
     }
   }
 
   pasteMenuOrNote(targetItem) {
-    if((targetItem.menuId === this.recForCopyCut.pId) || this.recTypeForCopyCut === 'menu') {
+    if ((targetItem.menuId === this.recForCopyCut.pId) || this.recTypeForCopyCut === 'menu') {
       if (this.isRecCopyCut) {
-        let data = { pId: null, menuName: 'copy of: ' + this.recForCopyCut.menuName, orderId: targetItem.orderId };
-         this.note2Service.addFile([data])
+        let data = { pId: targetItem.menuId, menuName: 'copy of: ' + this.recForCopyCut.menuName, orderId: targetItem.orderId };
+        this.note2Service.addFile([data])
           .subscribe(
             res => {
-              this.folderList.splice(targetItem.orderId, 0, res[0]);
-              this.updateFolderSortOrder();
+              this.folderList.splice(targetItem.orderId, 0, res[0]); 
             }
           );
-  
+
       } else {
-        moveItemInArray(this.dataSource.data, this.recForCopyCut.orderId, targetItem.orderId);
-        this.updateFolderSortOrder();
+        moveItemInArray(this.dataSource.data, this.recForCopyCut.orderId, targetItem.orderId); 
       }
-    }else {
+    } else {
       this.selectedNode = targetItem;
       this.changeRef.detectChanges();
-      this.noteService.getItems({ pId: targetItem.menuId  }).subscribe(
+      this.noteService.getItems({ pId: targetItem.menuId }).subscribe(
         (res: Item[]) => {
           this.spinner.hide();
           this.noteList = res.sort((a, b) => a.orderId - b.orderId);
           this.recForCopyCut.pId = targetItem.menuId;
-       
-          if(this.isRecCopyCut) {
+
+          if (this.isRecCopyCut) {
             let data = { pId: targetItem.menuId, content: 'copy of: ' + this.recForCopyCut.content, orderId: targetItem.orderId };
             this.recForCopyCut.content = 'copy of: ' + this.recForCopyCut.content;
             this.noteService.addItem([data])
-            .subscribe(
-              res => {
-                this.noteList.splice(targetItem.orderId, 0, res[0]);
-                this.updateItemSortOrder();;
-              }
-            );
-          }else {
-            this.noteList.splice(targetItem.orderId, 0 , this.recForCopyCut);
-            this.updateItemSortOrder();
-          }          
-          this.selectedNode = targetItem;
-
-          // this.updateFolderSortOrder();
+              .subscribe(
+                res => {
+                  this.noteList.splice(targetItem.orderId, 0, res[0]); 
+                }
+              );
+          } else {
+            this.noteList.splice(targetItem.orderId, 0, this.recForCopyCut); 
+          }
+          this.selectedNode = targetItem; 
         }, (error) => {
           this.spinner.hide();
           console.log(error);
         });
-    }
- 
-
-    // if (this.recTypeForCopyCut == 'menu') {
-    //   if (this.isRecCopyCut) {
-    //     this.copyMenuToMenu(targetItem, this.recForCopyCut);
-    //   } else {
-    //     this.cutMenuToMenu(targetItem, this.recForCopyCut);
-    //   }
-    // } else {
-    //   if (this.isRecCopyCut) {
-    //     this.copyItemToMenu(targetItem, this.recForCopyCut);
-    //   } else {
-    //     this.cutItemToMenu(targetItem, this.recForCopyCut);
-    //   }
-    // }
+    } 
   }
   copyMenuToMenu(targetItem, recForCopyCut) {
     let menu: Menu = new Menu();
@@ -658,18 +555,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         this.getMenuList();
       }
     );
-  }
-  cutMenuToMenu(targetItem, recForCopyCut) {
-    let menu: Menu = new Menu();
-    menu.menuId = recForCopyCut.menuId;
-    menu.orderId = recForCopyCut.orderId;
-    menu.pId = targetItem.menuId;
-    this.spinner.show();
-    // this.note2Service.updateMenuSort_gen(menu).subscribe(res => { 
-    //      this.spinner.hide();
-    //      this.getMenuList();
-    // });
-  }
+  } 
   copyItemToMenu(targetItem, recForCopyCut) {
     this.spinner.show();
     this.noteService.addItem([{ pId: targetItem.menuId, content: 'copy of: ' + recForCopyCut.content, orderId: this.noteList.length }])
@@ -725,9 +611,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.noteService.delItem(item.itemId).subscribe(
       res => {
         let index = this.noteList.findIndex(note => note.itemId === item.itemId);
-        if(index > -1) {
-          this.noteList.splice(index, 1);
-          this.updateItemSortOrder();
+        if (index > -1) {
+          this.noteList.splice(index, 1); 
         }
         this.spinner.hide();
         this.getItems();
@@ -737,10 +622,9 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.spinner.show();
     this.note2Service.delFile(key).subscribe(
       res => {
-        let index =  this.dataSource.data.findIndex(node => node.menuId === key);
-        if(index > -1) {
-          this.dataSource.data.splice(index, 1);
-          this.updateFolderSortOrder();
+        let index = this.dataSource.data.findIndex(node => node.menuId === key);
+        if (index > -1) {
+          this.dataSource.data.splice(index, 1); 
         }
         this.spinner.hide();
         this.getMenuList();
