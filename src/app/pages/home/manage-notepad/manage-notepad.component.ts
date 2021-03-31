@@ -68,7 +68,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   Visible = false;
   isOkLoading = false;
   addFileItem: { menuName: string, pId: number } = { menuName: '', pId: this.pId };
-
+  activeNote:any;
   constructor(private msgService: NzMessageService,
     private noteService: NoteService,
     private loginService: LoginService,
