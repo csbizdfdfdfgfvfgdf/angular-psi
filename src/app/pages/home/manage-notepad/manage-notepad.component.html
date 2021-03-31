@@ -64,21 +64,21 @@
                              {{node.menuName}}
                         </li>
                         </mat-tree-node> 
-                        <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding cdkDrag [cdkDragData]="node"
-                                               (contextmenu)="onContextMenu($event, node,'menu')">
+                        <mat-nested-tree-node *matTreeNodeDef="let childnode; when: hasChild" matTreeNodePadding cdkDrag [cdkDragData]="childnode"
+                                               (contextmenu)="onContextMenu($event, childnode,'menu')">
                         <li>
-                            <div class="mat-tree-node" (click)="activeNode = node;activatedNodeChange(node)" 
-                                 [ngClass]="{ 'background-highlight': activeNode === node }" id="{{node.menuId}}">
+                            <div class="mat-tree-node" (click)="activeNode = childnode;activatedNodeChange(childnode)" 
+                                 [ngClass]="{ 'background-highlight': activeNode === childnode }" id="{{childnode.menuId}}">
                             <button mat-icon-button matTreeNodeToggle
-                                    [attr.aria-label]="'Toggle ' + node.menuName">
+                                    [attr.aria-label]="'Toggle ' + childnode.menuName">
                                 <mat-icon class="mat-icon-rtl-mirror">
-                                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                {{treeControl.isExpanded(childnode) ? 'expand_more' : 'chevron_right'}}
                                 </mat-icon>
                             </button>
                             <mat-icon>folder_open</mat-icon>
-                            {{node.menuName}}
+                            {{childnode.menuName}}
                             </div>
-                            <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                            <ul [class.example-tree-invisible]="!treeControl.isExpanded(childnode)">
                             <ng-container matTreeNodeOutlet></ng-container>
                             </ul>
                         </li>

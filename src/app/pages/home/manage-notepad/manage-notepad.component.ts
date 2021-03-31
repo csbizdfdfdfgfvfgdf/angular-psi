@@ -622,10 +622,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         );
 
     } else {
-      if(this.noteList[0].pId === this.recForCopyCut.pId) {
+      if(this.noteList && this.noteList.length>0 && this.noteList[0].pId === this.recForCopyCut.pId) {
         moveItemInArray(this.noteList, this.recForCopyCut.orderId, targetItem.orderId);
       }else {
-        this.recForCopyCut.pId = targetItem.pId;
+        this.recForCopyCut.pId = targetItem.menuId;
         this.noteList.splice(targetItem.orderId, 0 , this.recForCopyCut);
       }
       this.updateItemSortOrder();
