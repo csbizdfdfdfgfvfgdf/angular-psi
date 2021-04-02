@@ -83,6 +83,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   ngOnInit(): void {
     this.getUser();
+    // adding languages localy
     this.translate.addLangs(['en', 'ch']);
     let dfltLang = localStorage.getItem('lang');
     if (dfltLang != null && dfltLang != '') {
@@ -93,6 +94,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.translate.setDefaultLang('en');
     }
   }
+  // event called when language change 
   switchLang(lang: string) {
     this.translate.use(lang);
     localStorage.removeItem('lang');
@@ -162,7 +164,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     }
 
   }
-
+  // sort the item list when drag and drop event called or when cut paste method called
   updateItemSortOrder() {
     this.noteList.forEach((note, index) => {
       note.orderId = index;
@@ -180,12 +182,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     })
     this.updateItemSort(updatedData);
   }
-
+// on drag folder or menu started we put draging object to a variable
   dragFolderStarted(menu) {
     this.dragingMenu = menu;
   }
 
-
+// sort the folder list when drag and drop event called or when cut paste method called
   updateFolderSortOrder() {
     this.dataSource.data.forEach((folder, index) => {
       folder.orderId = index;
@@ -241,6 +243,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     );
   }
+  // this method return all menues on left side
   getMenuList(key?: string) {
     this.noteService.getMenus().subscribe(res => {
       this.isUserAlreadyExist = true;
@@ -255,6 +258,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.spinner.hide();
     });
   }
+  // convert a linear list into a tree structure
   makeTreeData(menus: any[]) {
     this.spinner.show();
     menus.forEach(element => {
@@ -383,6 +387,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedNode = activeNode;
     this.getItems();
   }
+  
   submit() {
     if (this.selectedNode && this.folderList.length > 0) {
       if (this.fieldContent !== null && this.fieldContent != '') {
@@ -407,6 +412,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+  // adding file into root directory
   addRootFile() {
     let orderId = this.noteList.length;
     let item = { itemId: this.noteList.length + 1, content: this.fieldContent, orderId: this.noteList.length }
@@ -516,7 +522,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     this.showModal(); 
   }
-  // cut,copy and paste right click menus
+  // cut,copy and paste right click menus 
   isRecCopyCut: boolean = false;
   recForCopyCut: any;
   recTypeForCopyCut: any;
@@ -526,6 +532,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   contextMenuPosition = { x: '0px', y: '0px' };
   contextMenus: any = [];
   // dynamicaly lists for context menus
+  // these will dynamically load context menu when right clicked on left or right side
   generalcontextMenusItem: any[] = [{ type: 'cut', icon: 'content_cut', key: 'contetMenu.cut' },
                                 { type: 'copy', icon: 'content_copy', key: 'contetMenu.copy' },
                                 { type: 'edit', icon: 'edit', key: 'contetMenu.edit' },
@@ -540,6 +547,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   itemBodycontextMenus: any[] = [{ type: 'paste', icon: 'content_paste', key: 'contetMenu.paste' }];
  
   isInnerMenuClicked:Boolean = false;
+  // called when right clicked mouse event occur on left side
   onContextMenuItem(event: MouseEvent, item: any = null,isInnerMenuClicked = false) {
     event.preventDefault();
     if(item){
@@ -558,6 +566,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
+  // called when right clicked mouse event occur on right side
   onContextMenu(event: MouseEvent, item: any, recType: any) {
     event.preventDefault();
     this.contextMenus = this.generalcontextMenus;
@@ -567,7 +576,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
-  // when context menu clicked
+  // when clicked on provided context menus popup
   onContextMenuAction(item: any, recType, action) {
     if (action == 'create_new_folder') {
       this.addFileItem.pId = this.pId = item.key;
@@ -588,9 +597,9 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     if (action == 'paste') {
       this.isNoteMenuPaste = false;
       if(this.recTypeForCopyCut == 'note'){
-        if(item){ // this case when you right click to folder and paste
+        if(item){ // this case when you right click to folder and paste 
           this.pasteNote(item);
-        }else{  // this case when you click on right side area to paste note
+        }else{  // this case when you click on right side area to paste note 
           this.pasteNote(this.selectedNode); 
         }
       }else{
@@ -610,8 +619,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+  // paste method called when clicked from context menu
   pasteNote(targetItem) {
+    // it check if you are going to copy or cut 
+    // for copy isRecCopyCut will be true and for cut isRecCopyCut will be false
     if (this.isRecCopyCut) {
+      //pid is the folder id to which the given note is pasted
       let data = { pId: targetItem.pId?targetItem.pId:targetItem.menuId, content: 'copy of: ' + this.recForCopyCut.content, orderId: targetItem.orderId };
       this.noteService.addItem([data])
         .subscribe(
@@ -634,7 +647,9 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
 
   pasteMenuOrNote(targetItem) {
     if((targetItem.menuId === this.recForCopyCut.pId) || this.recTypeForCopyCut === 'menu') {
-      if (this.isRecCopyCut) {
+      // it check if you are going to copy or cut 
+      // for copy isRecCopyCut will be true and for cut isRecCopyCut will be false
+    if (this.isRecCopyCut) {
         let data = { pId: null, menuName: 'copy of: ' + this.recForCopyCut.menuName, orderId: targetItem.orderId };
          this.note2Service.addFile([data])
           .subscribe(
