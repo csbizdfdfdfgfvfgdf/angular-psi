@@ -12,6 +12,7 @@ export class PrivacyTermsComponent implements OnInit {
     public translate: TranslateService,) { }
 
   ngOnInit(): void {
+     // adding local languages this time we have just two lanuages
     this.translate.addLangs(['en', 'ch']);
     let dfltLang = localStorage.getItem('lang');
     if(dfltLang != null && dfltLang != ''){

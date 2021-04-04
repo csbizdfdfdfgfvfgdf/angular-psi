@@ -31,6 +31,7 @@ interface TreeNodeData {
   userName: any;
   userType: any;
 }
+// this component is used to manage notes and folders
 @Component({
   selector: 'app-manage-notepad',
   templateUrl: './manage-notepad.component.html',
@@ -38,6 +39,7 @@ interface TreeNodeData {
 })
 
 export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy {
+  // component variables or local veriables 
   keyEnter: Observable<any> = fromEvent(window, 'keyup.enter');
   activeNode: any;
   @ViewChildren(MatTreeNode, { read: ElementRef }) treeNodes: ElementRef[];
@@ -69,6 +71,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   isOkLoading = false;
   addFileItem: { menuName: string, pId: number } = { menuName: '', pId: this.pId };
   activeNote:any;
+
+  // constructor for this class which is used to initilise this class
   constructor(private msgService: NzMessageService,
     private noteService: NoteService,
     private loginService: LoginService,
@@ -81,8 +85,13 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     private nzContextMenuService: NzContextMenuService) {
 
   }
+
+  // this method call on when class initization done
   ngOnInit(): void {
+    // get user if already login 
     this.getUser();
+
+    // adding local languages this time we have just two languages
     this.translate.addLangs(['en', 'ch']);
     let dfltLang = localStorage.getItem('lang');
     if (dfltLang != null && dfltLang != '') {
@@ -93,11 +102,17 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.translate.setDefaultLang('en');
     }
   }
+
+  // this event called when try to change language 
   switchLang(lang: string) {
     this.translate.use(lang);
     localStorage.removeItem('lang');
     localStorage.setItem('lang', lang);
   }
+
+  // when dom (view) page initilization done it will be called
+  // in this method we are subscribing an event for saving items and notes
+  // it will immigiately add note or folder with out waiting user to server response 
   ngAfterViewInit() {
     this.submitSubject.pipe(
       throttleTime(500),
@@ -138,31 +153,41 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // when drag started
   dragStarted(item: any) {
     this.dragingItem = item;
   }
+
+  // when drop note or folder
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       this.dragingItem.orderId = event.currentIndex;
+      // this is build in method for tree draging
       moveItemInArray(this.noteList, event.previousIndex, event.currentIndex);
+      // refreshing data after draging droping
       this.updateItemSortOrder();
     } else {
     }
   }
 
+// when droping folders from tree into itself
   dropTree(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       this.spinner.show();
       if(this.dragingMenu) {
         this.dragingMenu.orderId = event.currentIndex;
       }
+      // this is build in method for tree draging
       moveItemInArray(this.dataSource.data, event.previousIndex, event.currentIndex);
+      // refreshing data after draging droping
       this.updateFolderSortOrder();
     } else {
     }
 
   }
 
+  // when drag and drop items this method will update their orders
   updateItemSortOrder() {
     this.noteList.forEach((note, index) => {
       note.orderId = index;
@@ -180,12 +205,12 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     })
     this.updateItemSort(updatedData);
   }
-
+// when draging folder started 
   dragFolderStarted(menu) {
     this.dragingMenu = menu;
   }
 
-
+  // when drag and drop folder this method will update their orders
   updateFolderSortOrder() {
     this.dataSource.data.forEach((folder, index) => {
       folder.orderId = index;
@@ -209,6 +234,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.noteService.dragSubject.next({ item, index: i });
   }
+
+  // these methods are not being used any where currenly 
   startEdit(id: string) {
     this.editId = id;
   }
@@ -216,6 +243,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.editId = null;
     this.editItem(item);
   }
+
+  // when editing items from context menu
   editItem(item) {
     this.spinner.show();
     this.noteList.forEach((note) => {
@@ -231,6 +260,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           this.getItems();
         });
   }
+
+  // when editing folder from context menu
   editFile(data) {
     this.spinner.show();
     this.note2Service.editFile([{ menuId: data.key, menuName: data.menuName, orderId : data.orderId }]).subscribe(
@@ -241,6 +272,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     );
   }
+
+  // getting all folders for current user
   getMenuList(key?: string) {
     this.noteService.getMenus().subscribe(res => {
       this.isUserAlreadyExist = true;
@@ -249,12 +282,15 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.selectedNode = null;
       if (res) {
         this.folderList = res;
+        // this linear response will be convert to tree validated object
         this.makeTreeData(res);
       }
     }, (error) => {
       this.spinner.hide();
     });
   }
+
+  // will get input of linear data and will return tree structed object
   makeTreeData(menus: any[]) {
     this.spinner.show();
     menus.forEach(element => {
@@ -280,6 +316,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   isUserAlreadyExist: boolean = true;
   isOpenUser: boolean = false;
+
+  // will get current user it will check if user is visitor or properly registered
   getUser() {
     this.spinner.show();
     this.noteService.getUser().subscribe((res: any) => {
@@ -308,6 +346,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     const source = timer(1000, 10000);
     source.subscribe(val => this.getUpdatedMenus());
   }
+
+  // refreshed folder list after having operation on its list ( delete,drag drop or add)
   getUpdatedMenus() {
     this.noteService.getMenus().subscribe(res => {
       let newTreeData = [];
@@ -339,6 +379,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.spinner.hide();
     });
   }
+
+  // for those user who not registered s uuid is generated on server side this will get that uuid 
   getUuid() {
     this.spinner.show();
     this.noteService.getUuid().subscribe((res) => {
@@ -351,6 +393,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       console.log(error);
     });
   }
+
+  // for root users when any one save folder and that user is not registered then a uuid is generated on server side
   getUuidForRootNote() {
     this.spinner.show();
     this.noteService.getUuid().subscribe((res) => {
@@ -383,6 +427,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedNode = activeNode;
     this.getItems();
   }
+
+  // when adding note into any folders or root level on submit button clicked this event called
   submit() {
     if (this.selectedNode && this.folderList.length > 0) {
       if (this.fieldContent !== null && this.fieldContent != '') {
@@ -397,6 +443,9 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.addRootFile();
     }
   }
+
+  // for first time when any one try to save record it check if user already exists or not
+  //  if user does not exists then it will make a uuid for that user to save records
   checkUsetExistForRootNote() {
     this.Visible = false;
     if (this.isUserAlreadyExist) {
@@ -407,6 +456,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+
+  // for addig note into root level
   addRootFile() {
     let orderId = this.noteList.length;
     let item = { itemId: this.noteList.length + 1, content: this.fieldContent, orderId: this.noteList.length }
@@ -421,6 +472,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         }
       );
   }
+
+  // this will get all items by selected folder id
   getItems() {
     if (this.selectedNode && this.selectedNode.menuId) {
       const key = this.selectedNode.menuId;
@@ -438,11 +491,14 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
+  // this will get all notes on root level
   getRootNOte() {
     this.selectedNode = null;
     this.activeNode = null;
     this.getItemsByUserId();
   }
+  
+  // this will get all notes on root level for current user
   getItemsByUserId() {
     this.noteService.getItemsByUser().subscribe(
       (res: Item[]) => {
@@ -451,6 +507,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         console.log(error);
       });
   }
+
+  // when updating sorting ( drag drop items)
   updateItemSort(tmpnode) {
     this.noteService.updateItemSort_gen(tmpnode).subscribe(
       res => {
@@ -463,6 +521,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.getMenuList();
     });
   }
+
+  // these methods are not being used this time
   copy(item) {
   }
   cut(item) {
@@ -471,10 +531,16 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   setMoveItem() {
   }
-  //===================add edit delete folder=================
+
+  //===================add edit delete folder functionality started here =================
+
+  // open modal windo to take folder name
   showModal(): void {
     this.Visible = true;
   }
+
+  // for first time when any one try to save record it check if user already exists or not
+  //  if user does not exists then it will make a uuid for that user to save records
   checkUsetExist() {
     this.Visible = false;
     if (this.isUserAlreadyExist) {
@@ -485,6 +551,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+
+  // when save button clicked on modal window to save folder
   handleOk(): void {
     let copy = JSON.parse(JSON.stringify(this.addFileItem))
     copy.orderId = this.folderList.length;
@@ -496,9 +564,13 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.msgService.success(this.getTranslationString('notepad.addedSuccess', ''));
     this.submitFolder.next(copy);
   }
+
+  // cancel button clicked on modal window for adding folder
   handleCancel(): void {
     this.Visible = false;
   }
+
+  // will open modal window to add folder
   add(e, key) {
     e.stopPropagation();
     this.addFileItem.pId = this.pId = key;
@@ -507,6 +579,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   addFile() {
     this.showModal();
   }
+
+  // for adding folder into folder or on root level
   addFootFile() {
     if (this.selectedNode && this.selectedNode.menuId) {
       const key = this.selectedNode.menuId;
@@ -540,6 +614,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   itemBodycontextMenus: any[] = [{ type: 'paste', icon: 'content_paste', key: 'contetMenu.paste' }];
  
   isInnerMenuClicked:Boolean = false;
+  // when right clicked on right side to open context menu  
   onContextMenuItem(event: MouseEvent, item: any = null,isInnerMenuClicked = false) {
     event.preventDefault();
     if(item){
@@ -558,6 +633,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
   }
+
+  // when left side clicked to open context menu
   onContextMenu(event: MouseEvent, item: any, recType: any) {
     event.preventDefault();
     this.contextMenus = this.generalcontextMenus;
@@ -566,8 +643,10 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     this.contextMenu.menuData = { 'item': item, 'recType': recType };
     this.contextMenu.menu.focusFirstItem('mouse');
     this.contextMenu.openMenu();
-  }
-  // when context menu clicked
+  } 
+  
+  // when clicked on any context menu 
+  // there is switch statement to check which menu clicked and then perform operation 
   onContextMenuAction(item: any, recType, action) {
     if (action == 'create_new_folder') {
       this.addFileItem.pId = this.pId = item.key;
@@ -610,6 +689,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     }
   }
+
+  // when paste option clicked from contet menu
   pasteNote(targetItem) {
     if (this.isRecCopyCut) {
       let data = { pId: targetItem.pId?targetItem.pId:targetItem.menuId, content: 'copy of: ' + this.recForCopyCut.content, orderId: targetItem.orderId };
@@ -632,6 +713,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
+  // when pasting menu or folder
   pasteMenuOrNote(targetItem) {
     if((targetItem.menuId === this.recForCopyCut.pId) || this.recTypeForCopyCut === 'menu') {
       if (this.isRecCopyCut) {
@@ -645,6 +727,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           );
   
       } else {
+        // default method of mat-tree to moving data into tree
         moveItemInArray(this.dataSource.data, this.recForCopyCut.orderId, targetItem.orderId);
         this.updateFolderSortOrder();
       }
@@ -680,6 +763,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         });
     } 
   }
+
+  // when copy menu clicked from context menu
   copyMenuToMenu(targetItem, recForCopyCut) {
     let menu: Menu = new Menu();
     menu.menuName = 'copy of:' + recForCopyCut.menuName;
@@ -692,6 +777,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     );
   }
+
+  // when cut menu clicked from context menu
   cutMenuToMenu(targetItem, recForCopyCut) {
     let menu: Menu = new Menu();
     menu.menuId = recForCopyCut.menuId;
@@ -699,6 +786,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
     menu.pId = targetItem.menuId;
     this.spinner.show(); 
   }
+  
+  // when copy note clicked from contet menu
   copyItemToMenu(targetItem, recForCopyCut) {
     this.spinner.show();
     this.noteService.addItem([{ pId: targetItem.menuId, content: 'copy of: ' + recForCopyCut.content, orderId: this.noteList.length }])
@@ -708,6 +797,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
           this.getItems();
         });
   }
+
+  // when copy note into folder context menu clicked
   cutItemToMenu(targetItem, recForCopyCut) {
     let item: Item = new Item();
     item.itemId = recForCopyCut.itemId;
@@ -719,6 +810,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.getItems();
     });
   }
+
+  // when delete option clicked from context menu of folder or notes
   deleteMenuOrNote(targetItem, recType) {
     if (recType == 'menu') {
       this.deleteNode(targetItem.key)
@@ -726,10 +819,14 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.deleteItem(targetItem);
     }
   }
+
+  // local variable for editing folders or notes
   editMenuData: Menu = new Menu();
   editItemData: Item = new Item();
   editItemVisible: boolean = false;
   editMenuVisible: boolean = false;
+
+  // this will open a modal window for editing folder or notes
   openEdotDialog(record, type): void {
     if (type == 'menu') {
       this.editMenuData = Object.assign({}, record);
@@ -739,16 +836,22 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       this.editItemVisible = true;
     }
   }
+
+  // from modal window save clicked event for folder
   saveMenuRecord() {
     this.editItemVisible = false;
     this.editMenuVisible = false;
     this.editFile(this.editMenuData);
   }
+
+  // from modal window save clicked event for notes
   saveItemRecord() {
     this.editItemVisible = false;
     this.editMenuVisible = false;
     this.editItem(this.editItemData);
   }
+
+  // delete option clicked for notes from context menu
   deleteItem(item) {
     this.spinner.show();
     this.noteService.delItem(item.itemId).subscribe(
@@ -762,6 +865,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         this.getItems();
       });
   }
+
+  // this method is used to remove node from tree. not having any server call just on ui side
   deleteNode(key) {
     this.spinner.show();
     this.note2Service.delFile(key).subscribe(
@@ -781,6 +886,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }
     );
   }
+
+  // it will translate string to selected language
   getTranslationString(key: string, params: Object): string {
     let str: string;
     this.translate.get(key, params).subscribe((res: string) => {

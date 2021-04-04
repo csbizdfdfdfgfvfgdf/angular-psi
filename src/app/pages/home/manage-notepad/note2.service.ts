@@ -6,6 +6,8 @@ import {UrlService} from '../../../common/service/url.service';
 import {Menu} from '../../../model/menu';
 import {MoveItem} from '../../../model/move-item';
 
+// services are responsible to send api calls to server like this one
+// you can save any object into a temporary varialbes in services by getter setter
 interface MenuSort {
     pid: number;
     mid_arr: Array<number>;

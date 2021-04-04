@@ -6,7 +6,8 @@ import {of} from 'rxjs';
   providedIn: 'root'
 })
 export class UrlService {
-
+  // services are responsible to send api calls to server like this one
+  // you can save any object into a temporary varialbes in services by getter setter
   constructor() {
   }
 

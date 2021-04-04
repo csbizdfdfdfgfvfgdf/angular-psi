@@ -5,6 +5,8 @@ import {UrlService} from '../common/service/url.service';
 import {RegisterUser, ResetPwd, User} from '../model/user';
 import {Api} from '../api/api';
 
+  // services are responsible to send api calls to server like this one
+  // you can save any object into a temporary varialbes in services by getter setter
 @Injectable({
     providedIn: 'root'
 })
@@ -17,12 +19,12 @@ export class LoginService {
     constructor(private http: HttpClient,
                 private urlService: UrlService) {
     }
-
+// login call to sever
     login(user: User): Observable<any> {
         const url = this.urlService.getUrl(Api.login);
         return this.http.post(url, user);
     }
-
+// registration call to server
     register(registerUser: RegisterUser): Observable<any> {
         const url = this.urlService.getUrl(Api.register);
         return this.http.post(url, registerUser);

@@ -7,6 +7,7 @@ import {Res} from '../model/response';
 import {NzMessageService} from 'ng-zorro-antd';
 import {LoginToken} from '../model/login-token';
 import { TranslateService } from '@ngx-translate/core';
+import { subscribeOn } from 'rxjs/operators';
 
 @Component({
     selector: 'app-login',
@@ -14,7 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls: ['./login.component.less'],
 })
 export class LoginComponent implements OnInit {
-
+//  component variables 
     scale = 1;
     model = {};
     hide = true;
@@ -25,8 +26,8 @@ export class LoginComponent implements OnInit {
     Visible = false;
     resetVisible = false;
     isOkLoading = false;
-    findBackEmail: string;
 
+    // this event trigger when you resize your windows to make it responsive
     @HostListener('window:resize', ['$event'])
     onresize(event): void {
         let size = event.target.outerHeight / 768;
@@ -46,11 +47,14 @@ export class LoginComponent implements OnInit {
     }
 
     ngOnInit() {
+        // this is subscribedOn click on register button any time when clicked on registration link it will be called
         this.activatedroute.paramMap.subscribe(params => {
             if (params.get('doaction') === 'doregister') {
                 this.registerBox();
             }
         });
+
+        // adding local languages this time we have just two lanuages
         this.translate.addLangs(['en', 'ch']);
         let dfltLang = localStorage.getItem('lang');
         if(dfltLang != null && dfltLang != ''){
@@ -58,12 +62,7 @@ export class LoginComponent implements OnInit {
         }else{
             this.translate.setDefaultLang('en');
         }
-    }
-
-    formSubmit(): void {
-
-
-    }
+    } 
 
     getScale() {
         return {
@@ -71,8 +70,8 @@ export class LoginComponent implements OnInit {
         };
     }
 
-    login() {
-        console.log('loggin in ');
+// login button clicked event it will authenticate the user
+    login() { 
         this.loginService.login(this.user).subscribe((res: LoginToken) => {
             this.loginService.tokenSubject.next(res.token);
             // 保存token至sessionStorage
@@ -84,6 +83,8 @@ export class LoginComponent implements OnInit {
         });
     }
 
+// register button clicked event called. it will send details to save user
+// after completion it will auto login with that users
     register() {
         this.loginService.register(this.registerUser).subscribe(
             res => {
@@ -97,24 +98,27 @@ export class LoginComponent implements OnInit {
                 this.messageService.warning(this.getTranslationString('login.invalidParams',''));
             }
         );
-    }
+    } 
 
-
+    // these two flags are just to replace login screen with registeration and vise vrsa 
     registerBox() {
         this.translates = true;
-    }
-
-
+    } 
     loginBox() {
         this.translates = false;
     }
 
+    // modal windo will open when try to retirve password
     showModal(): void {
         this.Visible = true;
     }
+
+    // called when read Private policy link clicked it will route to policy page
     goToPrivacyPolicy(){
         this.router.navigate(['/privacy-terms']);
     }
+
+    // these are some methods used on different cases when cancel clicked to go to back screen
     handleFindBackOk(): void {
         this.Visible = false;
 

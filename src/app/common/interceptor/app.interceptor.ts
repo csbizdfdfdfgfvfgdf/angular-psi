@@ -9,6 +9,8 @@ import {LoginService} from "../../login/login.service";
 import { TranslateService } from '@ngx-translate/core';
 import { NoteService } from 'src/app/pages/home/manage-notepad/note.service';
 
+// interceptors are used when we want to check some conditions or code on eatch server call
+// for example we send token in earch server call which is added by this interceptor
 
 @Injectable()
 export class AppInterceptor implements HttpInterceptor {
@@ -48,7 +50,7 @@ export class AppInterceptor implements HttpInterceptor {
             }
         });
 
-
+    // each server call return into this method where we check if it failed or successed 
         return next.handle(authReq).pipe(
             tap(
                 event => {
@@ -74,12 +76,7 @@ export class AppInterceptor implements HttpInterceptor {
                     return event;
                 },
                 event => {
-                    if (event.status === 401) {
-                        // this.message.error('此用户未登录,或长时间未操作,请跳转到平台重新登录');
-                        // const returnUrl = localStorage.getItem('returnUrl');
-                        // if (returnUrl) {
-                        //   window.location.replace(returnUrl);
-                        // }
+                    if (event.status === 401) { 
                     } else {
                         this.message.error('Http Error' + ' ---- httpCode:' + event.status);
                     }

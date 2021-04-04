@@ -1,6 +1,9 @@
 import {Directive, Input} from '@angular/core';
 import {AbstractControl, NG_VALIDATORS, ValidatorFn} from '@angular/forms';
 
+//  directives are used to add behaviour into dom objects 
+//  this directive used to check passwordConfirm value
+
 @Directive({
   selector: '[appPasswordConfirm]',
   providers: [{provide: NG_VALIDATORS, useExisting: PasswordConfirmDirective, multi: true}]

@@ -24,8 +24,7 @@ export class Level3NodesDirective {
   }
 
   @HostListener('drop', ['$event'])
-  onDragDrop(event){
-    console.log("record droped",event); 
+  onDragDrop(event){  
     let dragObj:any = null;
     let getData = event.dataTransfer.getData("Text")
     event.preventDefault(); 

@@ -53,7 +53,7 @@
                 <div style="height: calc(100vh - 175px);"> 
                     <mat-icon style="cursor: pointer" [ngClass]="{ 'home-selected': !selectedNode}"
                                 (click)="getRootNOte()">home</mat-icon> 
-                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="example-tree"
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="menu-tree"
                               cdkDropList (cdkDropListDropped)="dropTree($event)"  id="treeFolder" #treeFolder> 
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle  matTreeNodePadding cdkDrag [cdkDragData]="node" (cdkDragStarted)="dragFolderStarted(node)"
                                         (contextmenu)="onContextMenu($event, node,'menu')"> 
@@ -78,7 +78,7 @@
                             <mat-icon>folder_open</mat-icon>
                             {{childnode.menuName}}
                             </div>
-                            <ul [class.example-tree-invisible]="!treeControl.isExpanded(childnode)">
+                            <ul [class.menu-tree-invisible]="!treeControl.isExpanded(childnode)">
                             <ng-container matTreeNodeOutlet></ng-container>
                             </ul>
                         </li>
@@ -94,10 +94,10 @@
               <div class="RightBox">
                     <header class="heading"></header> 
                     <header class="heading" style="padding-left: 5px;">{{'notepad.notes'|translate}}</header>  
-                <div class="example-list"  cdkDropList (cdkDropListDropped)="drop($event)" 
+                <div class="note-list"  cdkDropList (cdkDropListDropped)="drop($event)" 
                 #cdkDragItem="cdkDropList" [cdkDropListData]="noteList" [cdkDropListConnectedTo]="[cdkDragItem]"
                     (contextmenu)="onContextMenuItem($event)">
-                    <div class="example-box" *ngFor="let item of noteList;let i = index;" cdkDrag
+                    <div class="content-box" *ngFor="let item of noteList;let i = index;" cdkDrag
                         (cdkDragStarted)="dragStarted(item)" [cdkDragData]="item"
                         [ngClass]="{ 'background-highlight': activeNote === item }" (click)="activeNote = item"
                         (contextmenu)="activeNote = item;onContextMenuItem($event,item,true)">
@@ -106,7 +106,7 @@
                 </div> 
                 <mat-form-field appearance="outline" style="width: 100%">
                         <mat-label>{{'notepad.addContent'|translate}}</mat-label>
-                        <textarea rows="1" matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent" > </textarea>
+                        <input matInput id="fieldContent" name="fieldContent" [(ngModel)]="fieldContent">
                 </mat-form-field>
                 <button mat-flat-button style="background: #071E6C;color: white" (click)="checkUsetExistForRootNote()">
                     {{'notepad.submit' | translate }} 

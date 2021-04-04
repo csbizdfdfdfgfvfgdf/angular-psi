@@ -13,47 +13,27 @@ nz-content {
 nz-layout:last-child {
   margin: 0;
 }
-
-.example-container {
-  width: 100%;
-  display: inline-block;
-  vertical-align: top;
-}
-.example-list {
+.note-list {
   border: solid 1px #ccc;
-  height:calc(92vh - 130px) !important;
+  height: calc(100vh - 260px) !important; 
   background: white;
   border-radius: 4px;
   overflow: hidden;
   display: block;
+} 
+.note-list.cdk-drop-list-dragging .content-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-.flex{
-  display: flex;
-}
-.hidden{
-  height: 0 !important;
-  overflow: hidden;
-}
-.box-active{
-  background-color: #1890ff !important;
-  opacity: 0.6;
-}
-.example-box {
-  color: rgba(0, 0, 0, 0.87);
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  cursor: move;
+.note-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
   background: white;
-  font-size: 14px;
-  height: 40px;
-  line-height: 40px;
-  padding: 0 8px;
-
-  &:hover{
-    background-color: #1890ff;
-  }
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+} 
+.note-list.cdk-drop-list-dragging .content-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 .dropdownMenu:hover{
   background-color: #1890ff !important;
@@ -70,12 +50,6 @@ nz-layout:last-child {
   opacity: 0;
 }
 .cdk-drag-animating {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-// .example-box:last-child {
-//   border: none;
-// }
-.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 ::ng-deep .ant-btn-background-ghost.ant-btn-link {
@@ -96,11 +70,6 @@ nz-layout:last-child {
     box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
     background: #071E6C;
 } 
-.demoLogo{
-    height: 45px;
-    width: 150px;
-    margin-right: 20px;
-}
 .main-container{
   display: inline-flex;
   width: 100%; 
@@ -133,34 +102,19 @@ nz-layout:last-child {
   height: 20px;
   margin-right: 26px;
 }
-.iconHeading{
-  width: 28px;
-  height: 28px;
-  margin-right: 8px;
-}
-.iconsGroup{
-  width: 100%;
-  display: block;
-  text-align: right;
-  margin-bottom: 10px;
-}
-.iconSubmit{    
-  height: 50px;
-  width: 130px;
-  cursor: pointer;
-}
+
 // treeview
 mat-icon{
   margin-right: 5px;
 }
-.example-tree-invisible {
+.menu-tree-invisible {
   display: none;
 }
-.example-tree{ 
+.menu-tree{ 
   height:calc(100vh - 240px) !important;
 }
-.example-tree ul,
-.example-tree li {
+.menu-tree ul,
+.menu-tree li {
   margin-top: 0;
   margin-bottom: 0;
   list-style-type: none;
@@ -180,28 +134,8 @@ mat-icon{
 }
 ::ng-deep .home-selected{
   color: #87ceff !important;
-}
-
-
-.example-container {
-  width: 400px;
-  max-width: 100%;
-  margin: 0 25px 25px 0;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.example-list {
-  border: solid 1px #ccc;
-  min-height: 60px;
-  background: white;
-  border-radius: 4px;
-  overflow: hidden;
-  display: block;
-}
-
-.example-box {
-  padding: 20px 10px;
+} 
+.content-box {
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
   display: flex;
@@ -211,9 +145,14 @@ mat-icon{
   box-sizing: border-box;
   cursor: move;
   background: white;
-  font-size: 14px;
+  font-size: 14px; 
+  height: 40px;
+  line-height: 40px;
+  padding: 20px 10px;
+  &:hover{
+    background-color: #1890ff;
+  }
 }
-
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
@@ -229,16 +168,7 @@ mat-icon{
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
-
-// .example-box:last-child {
-//   border: none;
-// }
-
-.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-
+ 
 .drop-above {
   border-top: 10px solid #dddddd;
   margin-top: -10px;

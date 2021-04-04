@@ -8,6 +8,8 @@ import {Menu} from '../../../model/menu';
 import {Res} from '../../../model/response';
 import {Item} from '../../../model/item';
 
+// services are responsible to send api calls to server like this one
+// you can save any object into a temporary varialbes in services by getter setter
 interface Itemo {
     pId?: number | string;
     content?: string;
@@ -44,15 +46,7 @@ export class NoteService {
             map((res: Menu[]) => {
                 // 转换tree结构
                 const data: Menu[] = res; 
-                if (data instanceof Array) {
-                    // res.data = data.map(item => {
-                    //     return Object.assign(item, {
-                    //         title: item.name,
-                    //         key: item.id,
-                    //         expanded: true,
-                    //         children: item.child
-                    //     })
-                    // })
+                if (data instanceof Array) { 
                     this.setTreeData(data);
                 } else {
                     res = [];
@@ -109,16 +103,14 @@ export class NoteService {
         return this.http.post(url, data);
     }
 
-    updateItemSort_gen(item: Item) {
-        // const data: {itemId: number, pId: number, zindex: number} = {itemId: 0, pId: 0, zindex: 0};
-        // data.itemId = item.itemId;
-        // data.pId = item.pId;
-        // data.zindex = item.zindex;
+   // soriting items api call to server
+    updateItemSort_gen(item: Item) { 
         item.updated = new Date().toISOString();
         const url = this.url.getUrl(Api.updateItemSort);
         return this.http.put(url, item);
     }
-
+   
+    //  will convert linear data to tree strucured object
     setTreeData(data) {
         data = data.map(item => {
             return Object.assign(item, {
