@@ -119,9 +119,9 @@ export class LoginComponent implements OnInit {
     }
 
     // these are some methods used on different cases when cancel clicked to go to back screen
+    findBackEmail:any;
     handleFindBackOk(): void {
         this.Visible = false;
-
         this.loginService.retrievePwd(this.findBackEmail).subscribe(
             res => {
                 console.log(res);
