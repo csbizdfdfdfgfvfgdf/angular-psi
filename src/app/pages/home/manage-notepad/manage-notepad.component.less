@@ -1,10 +1,11 @@
+// modal window header styles
 nz-header{
   border-bottom: 1px solid #f0f0f0;
 }
 nz-sider {
   background-color: #fff;
 }
-
+// modal window contenta area styles
 nz-content {
   background-color: #fff;
   border-left: 1px solid #f0f0f0;
@@ -13,6 +14,8 @@ nz-content {
 nz-layout:last-child {
   margin: 0;
 }
+
+// note list container on right side styles
 .note-list {
   border: solid 1px #ccc;
   height: calc(100vh - 260px) !important; 
@@ -20,25 +23,14 @@ nz-layout:last-child {
   border-radius: 4px;
   overflow: hidden;
   display: block;
-} 
-.note-list.cdk-drop-list-dragging .content-box:not(.cdk-drag-placeholder) {
-  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-.note-list {
   border: solid 1px #ccc;
-  min-height: 60px;
-  background: white;
-  border-radius: 4px;
-  overflow: hidden;
-  display: block;
+  min-height: 60px; 
 } 
 .note-list.cdk-drop-list-dragging .content-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-.dropdownMenu:hover{
-  background-color: #1890ff !important;
-  opacity: 0.8;
-}
+} 
+
+// drag drop styles for cdk library contents started here
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
@@ -52,24 +44,34 @@ nz-layout:last-child {
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
+
+// these are link buttom on top like sign in and sign up
 ::ng-deep .ant-btn-background-ghost.ant-btn-link {
   color: rgba(0,0,0,0.65);
 }
 ::ng-deep .ant-btn-link{
   color:  white !important;
 } 
+
+// will fill space between two elements
 .spacer {
     flex: 1 1 auto;
 } 
+
+// this is top level container class have all page contents 
 .authcontainer {  
     position: fixed; 
     height: 100%;
     width: 100%;
 }  
+
+// top heading baar styles
 .header-box-shadow {
     box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
     background: #071E6C;
 } 
+
+// main container which have left and right side split areas
 .main-container{
   display: inline-flex;
   width: 100%; 
@@ -78,14 +80,20 @@ nz-layout:last-child {
   border: 5px solid #071E6C;
   padding: 10px;
 }
+
+// this is left side box styles
 .leftBox{ 
   padding: 10px;
   overflow: auto; 
 }
+
+// this is right side box styles
 .RightBox{ 
   padding: 10px;
   overflow: auto;
 }
+
+// this is copyright area styles on left side
 .copyright{
   width: 100%;
   text-align: right; 
@@ -93,6 +101,8 @@ nz-layout:last-child {
   background: darkgray; 
   padding-right: 50px; 
 }
+
+// this is heading stlyes on left and right side of split areas
 .heading{
   color: #071E6C; 
   font: 420 20px/45px Roboto, "Helvetica Neue", sans-serif;
@@ -103,7 +113,7 @@ nz-layout:last-child {
   margin-right: 26px;
 }
 
-// treeview
+// treeview styles started here
 mat-icon{
   margin-right: 5px;
 }
@@ -120,6 +130,8 @@ mat-icon{
   list-style-type: none;
   cursor: pointer;
 }
+
+// the node which is currently selected
 .background-highlight{
   background: #87ceff !important;;
   color: white !important;
@@ -129,12 +141,15 @@ mat-icon{
   color: white !important;
 }
 
+// style for home icon selected
 .home-selected{
   color: #87ceff !important;
 }
 ::ng-deep .home-selected{
   color: #87ceff !important;
-} 
+}
+
+// on left side where note list exist 
 .content-box {
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
@@ -153,6 +168,8 @@ mat-icon{
     background-color: #1890ff;
   }
 }
+
+// here cdk-drag drop library contents styling started
 .cdk-drag-preview {
   box-sizing: border-box;
   border-radius: 4px;
@@ -160,29 +177,25 @@ mat-icon{
               0 8px 10px 1px rgba(0, 0, 0, 0.14),
               0 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
-
 .cdk-drag-placeholder {
   opacity: 0;
 }
-
 .cdk-drag-animating {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
- 
+} 
 .drop-above {
   border-top: 10px solid #dddddd;
   margin-top: -10px;
-}
-
+} 
 .drop-below {
   border-bottom: 10px solid #dddddd;
   margin-bottom: -10px;
-}
-
+} 
 .drop-center {
   background-color: #dddddd;
 }
 
+// hosting page spliting areas styles
 :host::ng-deep .splitContentArea{
   background: white; 
   max-width: calc(100% - 205px);

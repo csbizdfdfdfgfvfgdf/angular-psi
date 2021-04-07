@@ -12,14 +12,14 @@ export class PasswordConfirmDirective {
 
   @Input('appPasswordConfirm') password: string;
 
-
+  // it validate password and also it add behaviuor to show and hide password by calling below method
   validate(control: AbstractControl): { [key: string]: any } | null {
     return this.password ? passwordConfirmValidator(this.password)(control)
       : null;
   }
 
 }
-
+// export type method means you can call this method out of class without any object or class instance
 export function passwordConfirmValidator(password: string): ValidatorFn {
   return (control: AbstractControl): { [key: string]: any } | null => {
     const forbidden = password !== control.value;

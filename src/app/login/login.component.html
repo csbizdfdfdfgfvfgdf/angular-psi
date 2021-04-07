@@ -1,9 +1,15 @@
+<!-- header of the login page started here-->
 <div class="title-box">
     <div class="title">
             {{'login.appName' | translate }}  
     </div>
 </div>
+<!-- header ends here -->
+
+<!-- form areas ( login + registration ) -->
 <div [ngClass]="{'box':translates}">
+
+    <!-- login form starts here -->
     <div class="login-box front">
         <div class="title">  {{'login.userLogin' | translate }}</div>
         <form #userForm="ngForm" class="example-form">
@@ -38,6 +44,7 @@
         </div>
     </div>
 
+    <!-- registration form starts here -->
     <div class="login-box back">
         <div class="title">{{'registration.userLogin' | translate}}</div>
         <form #registerForm="ngForm" class="example-form">
@@ -103,6 +110,7 @@
 
 </div>
 
+<!-- retrieve password by email popup modal window starts here -->
 <nz-modal
         [(nzVisible)]="Visible"
         nzTitle="{{'registration.retriveByPass'|translate}}"
@@ -111,8 +119,8 @@
         [nzOkDisabled]="!Form.form.valid"
         [nzOkLoading]="isOkLoading"
         [nzOkText]="'registration.confirm'|translate"
-        [nzCancelText]="'registration.cancel'|translate"
->
+        [nzCancelText]="'registration.cancel'|translate">
+
     <form #Form="ngForm" class="example-form">
         <nz-form-item>
             <nz-form-label nzRequired [nzSpan]="5">{{'registration.email'|translate}}</nz-form-label>
@@ -131,6 +139,7 @@
     </form>
 </nz-modal> 
 
+<!-- reset password popup modal window starts here -->
 <nz-modal
         [(nzVisible)]="resetVisible"
         nzTitle="{{'registration.resetPass'|translate}}"

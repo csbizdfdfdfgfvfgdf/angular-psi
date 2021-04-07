@@ -1,55 +1,74 @@
-<mat-sidenav-container class="authcontainer" >
-    <mat-sidenav-content style="z-index: unset;overflow: hidden;" >
-        <mat-toolbar  class="header-box-shadow">            
-             <span nz-col style="margin-left: 20px;" style="color: white">
-              {{'notepad.appHeading'|translate}}
-              </span> 
-             <span class="spacer"></span> 
-             
-             <ng-container>
-              <span nz-col style="margin-left: 20px;"  style="color: white">
-              <a nz-button nzType="link" routerLink="/login/doregister">{{'notepad.signUp'|translate}}</a>
-              </span>
-              <span nz-col style="margin-left: 20px;"  style="color: white">
-              <a nz-button nzType="link" routerLink="/login/dologin">{{'notepad.login'|translate}}</a>
-              </span>
-              </ng-container>  
-       </mat-toolbar> 
-       <div class="main-container">
-        <div class="contents">
-            <h2>Privacy Policy</h2>
-            <p>we goal to make it the world’s friendliest to-do list app, and very easy to use for everyone in the world.This Privacy Policy explains how information is collected, used and disclosed by psi with respect to user’s access and use of our service through the application (Referred to below as “psi ”).</p>
-       
-            <h2>1.Information collection</h2>
-            <p>When using psi , we ask certain information from you:“Personal Information”We dont collect any personal data, except the email addresses and information you submitted voluntarily will also be collected.</p>
-            <h2>2.Information usage</h2>
-            <p>Your data is not sent anywhere away from your device unless you sign up for an a ppssii .com account (hereinafter, Account).When you sign up for the Account, your data is uploaded to ppssii.com secure server in order to enable real-time data backup and synchronization .The personal information associated with your Account includes your name, email address, to-do lists, to-do items,  priorities, and list sharing settings.Any piece of information stored in your Account is not subject to disclosure or transfer to any third party under any conditions, except for the requests issued by law enforcement agencies under applicable legislation or court order.You are entitled with the full control over your personal information. Please reach us at csbiz@protonmail.com for any personal data requests and operations which are not available via the App and ppssii.com website out of the box. By your request, we can export and provide you all the information assets associated with your Account and/or to permanently delete your Account.</p>
-            <h2>3.We Won’t Sell Your Data</h2>
-            <p>we neither sell ads nor sell your data to third parties. We are just not that kind of business.</p>
-            <h2>4.Updates</h2>
-            <p>We reserve the right to update this Privacy Policy at any time in order to keep it relevant and actual with the psi evolution. The updated Privacy Policy will be posted on the ppssii .com website and emailed to users if appropriate.2021. ppssii.com is released. Privacy policy updated with the explanation on how we store and process your data on ppssii.com.</p>
-            <h2>5.Changes</h2>
-            <p>This Privacy Policy may be revised and modified at some time in the future. We will post on this page and notify you via official notifications or emails. Please check back periodically to keep informed of updates or changes to this Privacy Policy. By continuing to access and to use MinimaList, you are agreeing to be bound by the revised policy. </p> 
-       
-        </div>
-       </div>  
-       <div class="copyright">
-        <span>
-              {{'notepad.copyRight'|translate}}
-        </span>         
-        <span class="form-inline">
-         <select 
-             class="form-control" 
-             #selectedLang 
-             (change)="switchLang(selectedLang.value)">
-           <option *ngFor="let language of translate.getLangs()" 
-             [value]="language"
-             [selected]="language === translate.currentLang">
-             {{ language }}
-           </option>
-         </select>
-       </span>
- 
+<!-- main container contain whole content -->
+<mat-sidenav-container class="authcontainer">
+  <mat-sidenav-content style="z-index: unset;overflow: hidden;">
+    <!-- toolbar contain heading for the page -->
+    <mat-toolbar class="header-box-shadow">
+      <span nz-col style="margin-left: 20px;" style="color: white">
+        {{'notepad.appHeading'|translate}}
+      </span>
+      <span class="spacer"></span>
+
+      <ng-container>
+        <span nz-col style="margin-left: 20px;" style="color: white">
+          <a nz-button nzType="link" routerLink="/login/doregister">{{'notepad.signUp'|translate}}</a>
+        </span>
+        <span nz-col style="margin-left: 20px;" style="color: white">
+          <a nz-button nzType="link" routerLink="/login/dologin">{{'notepad.login'|translate}}</a>
+        </span>
+      </ng-container>
+    </mat-toolbar>
+    <!-- this container have content area -->
+    <div class="main-container">
+      <!-- here is the main contents -->
+      <div class="contents">
+        <h2>Privacy Policy</h2>
+        <p>we goal to make it the world’s friendliest to-do list app, and very easy to use for everyone in the
+          world.This Privacy Policy explains how information is collected, used and disclosed by psi with respect to
+          user’s access and use of our service through the application (Referred to below as “psi ”).</p>
+
+        <h2>1.Information collection</h2>
+        <p>When using psi , we ask certain information from you:“Personal Information”We dont collect any personal data,
+          except the email addresses and information you submitted voluntarily will also be collected.</p>
+        <h2>2.Information usage</h2>
+        <p>Your data is not sent anywhere away from your device unless you sign up for an a ppssii .com account
+          (hereinafter, Account).When you sign up for the Account, your data is uploaded to ppssii.com secure server in
+          order to enable real-time data backup and synchronization .The personal information associated with your
+          Account includes your name, email address, to-do lists, to-do items,  priorities, and list sharing
+          settings.Any piece of information stored in your Account is not subject to disclosure or transfer to any third
+          party under any conditions, except for the requests issued by law enforcement agencies under applicable
+          legislation or court order.You are entitled with the full control over your personal information. Please reach
+          us at csbiz@protonmail.com for any personal data requests and operations which are not available via the App
+          and ppssii.com website out of the box. By your request, we can export and provide you all the information
+          assets associated with your Account and/or to permanently delete your Account.</p>
+        <h2>3.We Won’t Sell Your Data</h2>
+        <p>we neither sell ads nor sell your data to third parties. We are just not that kind of business.</p>
+        <h2>4.Updates</h2>
+        <p>We reserve the right to update this Privacy Policy at any time in order to keep it relevant and actual with
+          the psi evolution. The updated Privacy Policy will be posted on the ppssii .com website and emailed to users
+          if appropriate.2021. ppssii.com is released. Privacy policy updated with the explanation on how we store and
+          process your data on ppssii.com.</p>
+        <h2>5.Changes</h2>
+        <p>This Privacy Policy may be revised and modified at some time in the future. We will post on this page and
+          notify you via official notifications or emails. Please check back periodically to keep informed of updates or
+          changes to this Privacy Policy. By continuing to access and to use MinimaList, you are agreeing to be bound by
+          the revised policy. </p>
+
+      </div>
     </div>
-    </mat-sidenav-content> 
-    </mat-sidenav-container> 
+    <!-- here is copyright area -->
+    <div class="copyright">
+      <span>
+        {{'notepad.copyRight'|translate}}
+      </span>
+      <span class="form-inline">
+        <select class="form-control" #selectedLang (change)="switchLang(selectedLang.value)">
+          <option *ngFor="let language of translate.getLangs()" [value]="language"
+            [selected]="language === translate.currentLang">
+            {{ language }}
+          </option>
+        </select>
+      </span>
+
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
