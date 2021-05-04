@@ -29,7 +29,11 @@ export class LoginService {
         const url = this.urlService.getUrl(Api.register);
         return this.http.post(url, registerUser);
     }
-
+// verify email by code 
+verifyEmail(request): Observable<any> {
+    const url = this.urlService.getUrl(Api.verifyEmail);
+    return this.http.post(url, request);
+}
     // 邮件找回密码
     retrievePwd(email: string) {
         const url = this.urlService.getUrl(Api.retrievePwd);

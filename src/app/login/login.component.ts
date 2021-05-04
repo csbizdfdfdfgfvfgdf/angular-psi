@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
     Visible = false;
     resetVisible = false;
     isOkLoading = false;
-
+    verifyEmailVisible = false;
     // this event trigger when you resize your windows to make it responsive
     @HostListener('window:resize', ['$event'])
     onresize(event): void {
@@ -89,13 +89,11 @@ export class LoginComponent implements OnInit {
         this.loginService.register(this.registerUser).subscribe(
             res => {
                 this.messageService.success(this.getTranslationString('login.regSuccess',''));
-                this.user.userName = this.registerUser.userName;
-                this.user.password = this.registerUser.password;
-                this.login();
-                this.loginBox();
+                this.openVerifyEmailModal();
             },
             (error) => {
-                this.messageService.warning(this.getTranslationString('login.invalidParams',''));
+                this.openVerifyEmailModal();   // this will be removed when backend integrated
+                // this.messageService.warning(this.getTranslationString('login.invalidParams',''));
             }
         );
     } 
@@ -138,7 +136,7 @@ export class LoginComponent implements OnInit {
 
     resetShowModal(): void {
         this.resetVisible = true;
-    }
+    } 
 
     resetBackOk(): void {
         this.resetVisible = false;
@@ -149,7 +147,33 @@ export class LoginComponent implements OnInit {
             }
         );
     }
-    
+
+    //  open modal window when sign up button clicked for verifying email address with a code
+
+    verifyEmailCancel(): void {
+        this.verifyEmailVisible = false;
+    }
+
+    openVerifyEmailModal(){
+        this.verifyEmailVisible = true;
+    }
+    emailCode:any="";
+    verifyEmailByCode(){
+        this.verifyEmailVisible = false; 
+        this.loginService.verifyEmail(this.emailCode).subscribe(
+            res => { 
+                this.user.userName = this.registerUser.userName;
+                this.user.password = this.registerUser.password;
+                this.login();
+                this.loginBox();
+            },
+            (error) => { 
+                this.messageService.warning(this.getTranslationString('login.invalidParams',''));
+                this.router.navigate(['/']); // this will be removed when backend integrated
+            }
+        );
+    }
+
     getTranslationString(key:string, params:Object):string {
         let str:string;
         this.translate.get(key, params).subscribe((res: string) => { 

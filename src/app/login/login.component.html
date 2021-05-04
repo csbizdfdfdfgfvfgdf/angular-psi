@@ -67,7 +67,7 @@
                 <mat-error *ngIf="registerPassword.invalid">{{'registration.passwordInvalid' | translate}}</mat-error>
             </mat-form-field>
 
-            <!-- <mat-form-field class="example-full-width">
+            <mat-form-field class="example-full-width">
                 <mat-label>{{'registration.confirmPassword' | translate}}</mat-label>
                 <input [appPasswordConfirm]="registerUser.password" id="password_confirmation" required matInput
                        #password_confirmation='ngModel'
@@ -83,7 +83,7 @@
                 <mat-error *ngIf="password_confirmation.errors?.required">
                         {{'registration.confirmPassEmpty'|translate}}
                 </mat-error>
-            </mat-form-field> -->
+            </mat-form-field>
 
             <mat-form-field class="example-full-width">
                 <mat-label>{{'registration.username'|translate}}</mat-label>
@@ -198,4 +198,38 @@
         </nz-form-item>
     </form>
 </nz-modal>
+
+
+
+<!-- verify email by code sent on email address popup modal window starts here -->
+<nz-modal
+        [(nzVisible)]="verifyEmailVisible"
+        nzTitle="{{'registration.confirmEmail'|translate}}"
+        (nzOnCancel)="verifyEmailCancel()"
+        (nzOnOk)="verifyEmailByCode()"
+        [nzOkDisabled]="!FormVerifyEmail.form.valid"
+        [nzOkLoading]="isOkLoading"
+        [nzOkText]="'registration.confirm'|translate"
+        [nzCancelText]="'registration.cancel'|translate">
+
+    <form #FormVerifyEmail="ngForm" class="example-form">
+        <h4 style="margin-bottom: 10px">{{'registration.checkEmail'|translate}} 
+            <span style="color: blue">{{registerUser.email}} </span>
+            {{'registration.codeSent'|translate}}</h4>
+        <nz-form-item>
+            <nz-form-label nzRequired [nzSpan]="5">{{'registration.enterCode'|translate}}</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" [nzErrorTip]="emailCodeErrorTpl">
+                <input nz-input [(ngModel)]="emailCode" name="required" required/>
+                <ng-template #emailCodeErrorTpl let-control>
+                    <ng-container *ngIf="control.hasError('emailCode')">
+                            {{'registration.emailCodeError'|translate}}
+                    </ng-container>
+                    <ng-container *ngIf="control.hasError('required')">
+                            {{'registration.emailInvalid'|translate}}
+                    </ng-container>
+                </ng-template>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+</nz-modal> 
 
