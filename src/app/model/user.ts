@@ -1,6 +1,7 @@
 export class User {
     userName: string;
     password: string;
+    email?: string;
 }
 
 export class RegisterUser extends User {

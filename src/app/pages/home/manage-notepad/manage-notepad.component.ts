@@ -16,6 +16,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { TranslateService } from '@ngx-translate/core';
 import { NoteService } from './note.service';
 import { Note2Service } from './note2.service';
+import { threadId } from 'worker_threads';
 
 declare var $: any;
 interface TreeNodeData {
@@ -226,12 +227,13 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
         userName: folder.userName,
         userType: folder.userType
       })
-    })
+    });
+    this.dataSource.data = updatedData;
     this.updateMenuSort(updatedData);
   }
+
   dragStartedOld(item: any, i: number, dragEl: HTMLElement) {
     this.spinner.show();
-
     this.noteService.dragSubject.next({ item, index: i });
   }
 
@@ -502,7 +504,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   getItemsByUserId() {
     this.noteService.getItemsByUser().subscribe(
       (res: Item[]) => {
-        this.noteList = res;
+        this.noteList = res.sort((a, b) => a.orderId - b.orderId);
       }, (error) => {
         console.log(error);
       });
@@ -516,6 +518,8 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
       }, (error) => {
       });
   }
+
+  // to update the sort order of side menu
   updateMenuSort(tmpnode) {
     this.note2Service.updateMenuSort_gen(tmpnode).subscribe(res => {
       this.getMenuList();
