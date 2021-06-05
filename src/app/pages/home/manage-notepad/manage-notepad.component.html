@@ -8,6 +8,13 @@
             </span>
             <span class="spacer"></span>
 
+            <!-- Container to display the username. If username not available then three letters from email -->
+            <ng-container *ngIf="user">
+                <span nz-col style="margin-left: 20px;" style="color: white">
+                    <a nz-button nzType="link" *ngIf="user.userName">{{user.userName}}</a>
+                    <a nz-button nzType="link" *ngIf="!user.userName">{{user.email}}</a>
+                </span>
+            </ng-container>
             <!-- user menu container -->
             <ng-container *ngIf="!user.userName">
                 <span nz-col style="margin-left: 20px;" style="color: white">
