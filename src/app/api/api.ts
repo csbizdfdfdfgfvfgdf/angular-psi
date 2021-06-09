@@ -8,7 +8,6 @@ export class Api {
     static makeUuid = 'auth/makeUuid'; //获取UUID
     static retrievePwd = 'auth/retrievePwd'; // 邮件找回密码
     static resetPwd = 'auth/resetPwd'; // 重置
-    static verifyEmail = 'verifyEmail'; // 注册接口
 
     /** 业务接口  **/
     static menuList = 'menus'; // 显示网站内容
