@@ -67,7 +67,7 @@
                 <mat-error *ngIf="registerPassword.invalid">{{'registration.passwordInvalid' | translate}}</mat-error>
             </mat-form-field>
 
-            <mat-form-field class="example-full-width">
+            <!-- <mat-form-field class="example-full-width">
                 <mat-label>{{'registration.confirmPassword' | translate}}</mat-label>
                 <input [appPasswordConfirm]="registerUser.password" id="password_confirmation" required matInput
                        #password_confirmation='ngModel'
@@ -83,7 +83,7 @@
                 <mat-error *ngIf="password_confirmation.errors?.required">
                         {{'registration.confirmPassEmpty'|translate}}
                 </mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
 
             <mat-form-field class="example-full-width">
                 <mat-label>{{'registration.username'|translate}}</mat-label>
