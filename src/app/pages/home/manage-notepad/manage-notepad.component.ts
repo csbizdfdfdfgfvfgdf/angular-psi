@@ -477,7 +477,7 @@ export class ManageNotepadComponent implements OnInit, AfterViewInit, OnDestroy 
   getItems() {
     if (this.selectedNode && this.selectedNode.menuId) {
       const key = this.selectedNode.menuId;
-       this.spinner.show();
+      this.spinner.show();
       this.noteService.getItems({ pId: key }).subscribe(
         (res: Item[]) => {
           this.spinner.hide();

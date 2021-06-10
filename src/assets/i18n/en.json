@@ -8,7 +8,7 @@
   "login.signin": "Sign in ",
   "login.retrivePass": "Retrieve password",
   "login.forgotPass": "Forgot password", 
-  "login.createAcc": "Sign up",
+  "login.createAcc": "Create Account",
   "login.invalidLogin": "Invalid login",
   "login.invalidParams": "Invalid parameters",
   "login.regSuccess": "registration success",

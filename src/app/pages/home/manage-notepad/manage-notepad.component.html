@@ -100,7 +100,7 @@
                             {{'notepad.copyRight'|translate}}
                         </span>
                     </div>
-                </as-split-area>
+                </as-split-area> 
                 <!-- second splited area -->
                 <as-split-area size="70" #area2>
                     <!-- right side box -->
@@ -108,7 +108,7 @@
                         <!-- right side heading -->
                         <header class="heading"></header>
                         <header class="heading" style="padding-left: 5px;">{{'notepad.notes'|translate}}</header>
-
+                        
                         <!-- note list container -->
                         <div class="note-list" cdkDropList (cdkDropListDropped)="drop($event)"
                             #cdkDragItem="cdkDropList" [cdkDropListData]="noteList"
